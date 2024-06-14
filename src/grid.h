@@ -1,12 +1,14 @@
 #ifndef GRID_H
 #define GRID_H
 
+
+#define GRID_WIDTH 500
+#define GRID_HEIGHT 500
+#define CELL_SIZE 20
+
+
+
 #include "raylib.h"
-
-#define GRID_WIDTH 1000
-#define GRID_HEIGHT 1000
-#define CELL_SIZE 30
-
 typedef Vector2 v2;
 
 extern int grid[GRID_HEIGHT][GRID_WIDTH]; // Declare the grid array

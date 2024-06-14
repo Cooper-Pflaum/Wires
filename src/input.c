@@ -1,64 +1,74 @@
-#include "input.h"
-#include <math.h> // Include math.h for fabs
+#include <raylib.h>
 #include <stdio.h>
+#include <math.h> // Include math.h for fabs
+#include "input.h"
 
-void HandleInput(v2 *startPos, v2 *endPos, bool *isDrawing, bool *drawHorizontalFirst, bool *directionSet, float *zoom, Vector2 *offset) {
+
+
+
+
+
+
+
+
+void HandleInput(struct DrawingState *state) {
     Vector2 mousePos = GetMousePosition();
-    // printf("Mouse Pos: %f, %f\n", mousePos.x, mousePos.y);
     Vector2 mouseDelta = GetMouseDelta();
     float mouseWheel = GetMouseWheelMove();
 
     // Handle zoom
-    *zoom += mouseWheel * 0.1f; // Zoom in/out based on mouse wheel scroll
-    if (*zoom < 0.1f) *zoom = 0.1f; // Prevent zooming out too much
-    if (*zoom > 3.0f) *zoom = 3.0f; // Prevent zooming in too much
+    state->zoom += mouseWheel * 0.1f;
+    if (state->zoom < 0.1f) state->zoom = 0.1f;
+    if (state->zoom > 3.0f) state->zoom = 3.0f;
 
     // Handle panning
     if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) {
-        offset->x += mouseDelta.x / *zoom;
-        offset->y += mouseDelta.y / *zoom;
+        state->offset.x += mouseDelta.x;
+        state->offset.y += mouseDelta.y;
 
-        if(offset->x > 0) offset->x = 0;
-        if(offset->y > 0) offset->y = 0;
-      
+        if (state->offset.x > 0) state->offset.x = 0;
+        if (state->offset.y > 0) state->offset.y = 0;
+        // if (state->offset.x < GetScreenWidth() * CELL_SIZE * GRID_WIDTH) state->offset.x = -GetScreenWidth() * CELL_SIZE * GRID_WIDTH - GetScreenWidth();
+        // if (state->offset.y < GetScreenHeight() * CELL_SIZE * GRID_HEIGHT) state->offset.y = -GetScreenHeight() * CELL_SIZE * GRID_HEIGHT - GetScreenHeight();
     }
 
     // Handle drawing
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-        HandleDrawingInput(startPos, endPos, isDrawing, drawHorizontalFirst, directionSet, mousePos, offset, zoom);
+        HandleDrawingInput(state, mousePos);
     } else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-        HandleDrawingRelease(startPos, endPos, isDrawing, drawHorizontalFirst, mousePos, offset, zoom);
+        HandleDrawingRelease(state, mousePos);
     }
 }
 
-void HandleDrawingInput(v2 *startPos, v2 *endPos, bool *isDrawing, bool *drawHorizontalFirst, bool *directionSet, Vector2 mousePos, Vector2 *offset, float *zoom) {
-    if (!*isDrawing) {
-        *startPos = SnapToGrid((v2){ (mousePos.x - offset->x) / *zoom, (mousePos.y - offset->y) / *zoom });
-        *isDrawing = true;
-        *directionSet = false; // Reset direction when starting a new drawing
+
+void HandleDrawingInput(struct DrawingState *state, Vector2 mousePos) {
+    if (!state->isDrawing) {
+        state->startPos = SnapToGrid((v2){ (mousePos.x - state->offset.x) / state->zoom, (mousePos.y - state->offset.y) / state->zoom });
+        state->isDrawing = true;
+        state->directionSet = false; // Reset direction when starting a new drawing
     }
 
-    if (!*directionSet) {
+    if (!state->directionSet) {
         // Determine initial direction based on the first significant movement
-        *drawHorizontalFirst = fabs(((mousePos.x - offset->x) / *zoom) - startPos->x) >= fabs(((mousePos.y - offset->y) / *zoom) - startPos->y);
-        *directionSet = true; // Set the direction
+        state->drawHorizontalFirst = fabs(((mousePos.x - state->offset.x) / state->zoom) - state->startPos.x) >= fabs(((mousePos.y - state->offset.y) / state->zoom) - state->startPos.y);
+        state->directionSet = true; // Set the direction
     }
 
-    *endPos = SnapToGrid((v2){ (mousePos.x - offset->x) / *zoom, (mousePos.y - offset->y) / *zoom });
+    state->endPos = SnapToGrid((v2){ (mousePos.x - state->offset.x) / state->zoom, (mousePos.y - state->offset.y) / state->zoom });
 
     // Reset direction if the mouse returns to the starting square
-    if (endPos->x == startPos->x && endPos->y == startPos->y) {
-        *directionSet = false;
+    if (state->endPos.x == state->startPos.x && state->endPos.y == state->startPos.y) {
+        state->directionSet = false;
     }
 }
 
-void HandleDrawingRelease(v2 *startPos, v2 *endPos, bool *isDrawing, bool *drawHorizontalFirst, Vector2 mousePos, Vector2 *offset, float *zoom) {
-    *endPos = SnapToGrid((v2){ (mousePos.x - offset->x) / *zoom, (mousePos.y - offset->y) / *zoom });
-    if (endPos->x != startPos->x || endPos->y != startPos->y) {
-        drawWire(*startPos, *endPos, *drawHorizontalFirst, false); // Draw the final wire
-        int endCellX = (int)(endPos->x / CELL_SIZE);
-        int endCellY = (int)(endPos->y / CELL_SIZE);
+void HandleDrawingRelease(struct DrawingState *state, Vector2 mousePos) {
+    state->endPos = SnapToGrid((v2){ (mousePos.x - state->offset.x) / state->zoom, (mousePos.y - state->offset.y) / state->zoom });
+    if (state->endPos.x != state->startPos.x || state->endPos.y != state->startPos.y) {
+        drawWire(state->startPos, state->endPos, state->drawHorizontalFirst, false); // Draw the final wire
+        int endCellX = (int)(state->endPos.x / CELL_SIZE);
+        int endCellY = (int)(state->endPos.y / CELL_SIZE);
         grid[endCellY][endCellX] = 1;
     }
-    *isDrawing = false;
+    state->isDrawing = false;
 }

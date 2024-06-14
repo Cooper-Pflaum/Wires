@@ -4,10 +4,22 @@
 #include "raylib.h"
 #include "grid.h"
 
-void HandleInput(v2 *startPos, v2 *endPos, bool *isDrawing, bool *drawHorizontalFirst, bool *directionSet, float *zoom, Vector2 *offset);
 
-void HandleDrawingInput(v2 *startPos, v2 *endPos, bool *isDrawing, bool *drawHorizontalFirst, bool *directionSet, Vector2 mousePos, Vector2 *offset, float *zoom);
+struct DrawingState {
+    v2 startPos;
+    v2 endPos; 
+    bool isDrawing;
+    bool drawHorizontalFirst;
+    bool directionSet;
+    float zoom;
+    Vector2 offset;
+};
 
-void HandleDrawingRelease(v2 *startPos, v2 *endPos, bool *isDrawing, bool *drawHorizontalFirst, Vector2 mousePos, Vector2 *offset, float *zoom);
+
+void HandleInput(struct DrawingState *state);
+
+void HandleDrawingInput(struct DrawingState *state, Vector2 mousePos);
+
+void HandleDrawingRelease(struct DrawingState *state, Vector2 mousePos);
 
 #endif // INPUT_H

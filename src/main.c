@@ -1,36 +1,46 @@
+#include <stdio.h>
 #include "raylib.h"
 #include "grid.h"
 #include "input.h"
 
+#define W 1920
+#define H 1080
+
+
 int main() {
-SetTraceLogLevel(LOG_ERROR); 
-    InitWindow(1920,1080, "Drawable Grid");
-    SetTargetFPS(60);
+    SetTraceLogLevel(LOG_ERROR);
+    InitWindow(W, H, "Drawable Grid");
 
-    v2 startPos = { 0, 0 };
-    v2 endPos = { 0, 0 };
-    bool isDrawing = false;
-    bool drawHorizontalFirst = true;
-    bool directionSet = false;
-
-    float zoom = 1.0f;
-    Vector2 offset = { 0.0f, 0.0f };
+    struct DrawingState state = {
+        .startPos = { 0, 0 },
+        .endPos = { 0, 0 },
+        .isDrawing = false,
+        .drawHorizontalFirst = true,
+        .directionSet = false,
+        .zoom = 1.0f,
+        .offset = { 0.0f, 0.0f }
+    };
 
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(BLACK);
 
-        BeginMode2D((Camera2D){ .offset = { offset.x, offset.y }, .target = { 0, 0 }, .rotation = 0.0f, .zoom = zoom });
+        BeginMode2D((Camera2D){ .offset = { state.offset.x, state.offset.y }, .target = { 0, 0 }, .rotation = 0.0f, .zoom = state.zoom });
 
-        HandleInput(&startPos, &endPos, &isDrawing, &drawHorizontalFirst, &directionSet, &zoom, &offset);
-        drawGrid(zoom, offset);
+        HandleInput(&state);
 
-        if (isDrawing) {
-            drawWire(startPos, endPos, drawHorizontalFirst, true); // Draw the wire preview
+        if (state.isDrawing) {
+            drawWire(state.startPos, state.endPos, state.drawHorizontalFirst, true);
         }
 
+        drawGrid(state.zoom, state.offset);
+
         EndMode2D();
-        DrawFPS(0,0);
+        DrawFPS(0, 0);
+        char zoomText[32];
+        sprintf(zoomText, "Zoom: %.2f", state.zoom);
+        DrawText(zoomText, 0, 20, 20, WHITE);
+
         EndDrawing();
     }
 

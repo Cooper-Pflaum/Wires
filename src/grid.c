@@ -1,5 +1,6 @@
 #include "grid.h"
 #include <math.h> // Include math.h for fabs
+#include <raylib.h>
 #include <stdio.h>
 
 int grid[GRID_HEIGHT][GRID_WIDTH] = { 0 }; // Initialize grid with all cells empty
@@ -42,66 +43,39 @@ void drawWire(v2 startPos, v2 endPos, bool drawHorizontalFirst, bool isPreview) 
   grid[(int)(endPos.y / CELL_SIZE)][(int)(endPos.x / CELL_SIZE)] = isPreview ? grid[(int)(endPos.y / CELL_SIZE)][(int)(endPos.x / CELL_SIZE)] : 1; // Update grid cell
   DrawRectangleRec((Rectangle){ endPos.x - CELL_SIZE / 2.0f, endPos.y - CELL_SIZE / 2.0f, CELL_SIZE, CELL_SIZE }, wireColor);
 }
-//
-// void drawGrid(float zoom, Vector2 offset) {
-//   // Calculate the visible area based on the zoom level and offset
-//   int startX = (int)((offset.x - GetScreenWidth() / (2.0f * zoom)) / CELL_SIZE);
-//   int endX = (int)((offset.x + GetScreenWidth() / (2.0f * zoom)) / CELL_SIZE);
-//   int startY = (int)((offset.y - GetScreenHeight() / (2.0f * zoom)) / CELL_SIZE);
-//   int endY = (int)((offset.y + GetScreenHeight() / (2.0f * zoom)) / CELL_SIZE);
-//
-//   // Clamp the visible area to the grid boundaries
-//   startX = fmax(startX, 0);
-//   endX = fmin(endX, GRID_WIDTH - 1);
-//   startY = fmax(startY, 0);
-//   endY = fmin(endY, GRID_HEIGHT - 1);
-//
-//   // Draw only the visible cells
-//   for (int y = startY; y <= endY; y++) {
-//     for (int x = startX; x <= endX; x++) {
-//       Rectangle cellRect = { x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE };
-//       if (grid[y][x]) {
-//         DrawRectangleRec(cellRect, WHITE); // Draw filled cell
-//       } else {
-//         DrawRectangleRec(cellRect, GRAY); // Draw empty cell outline
-//       }
-//     }
-//   }
-// }
-//
+
+
 
 void drawGrid(float zoom, Vector2 offset) {
   // Calculate the visible area based on the zoom level and offset
 
-  offset.x = (int)(offset.x / CELL_SIZE);
-  offset.y = (int)(offset.y / CELL_SIZE);
+  offset.x = -1 * (int)(offset.x / CELL_SIZE / zoom);
+  offset.y = -1 * (int)(offset.y / CELL_SIZE / zoom);
 
 
-  int startX = (int)((offset.x - GetScreenWidth()  / (2.0f * zoom)));
-  int endX =   (int)((offset.x + GetScreenWidth()  / (2.0f * zoom)));
-  int startY = (int)((offset.y - GetScreenHeight() / (2.0f * zoom)) / CELL_SIZE);
-  int endY =   (int)((offset.y + GetScreenHeight() / (2.0f * zoom)) / CELL_SIZE);
+  int startX = (int)(offset.x);
+  int endX =   (int)(offset.x + (int)(GetScreenWidth()  / zoom / CELL_SIZE)) + 1;
+  int startY = (int)(offset.y);
+  int endY =   (int)(offset.y + (int)(GetScreenHeight() / zoom / CELL_SIZE)) + 1;
 
   // Clamp the visible area to the grid boundaries
   startX = fmax(startX, 0);
-  endX = fmin(endX, GRID_WIDTH - 1);
+  endX = fmin(endX, GRID_WIDTH - 1 * CELL_SIZE);
   startY = fmax(startY, 0);
-  endY = fmin(endY, GRID_HEIGHT - 1);
+  endY = fmin(endY, GRID_HEIGHT - 1 * CELL_SIZE);
 
-  // printf("startX: %d\n", startX);
-  // printf("startY: %d\n", startY);
-  // printf("endX: %d\n", endX);
-  // printf("endY: %d\n", endY);
-  // printf("Offset X: %f\nOffset Y: %f\n", offset.x, offset.y);
   // Draw only the visible cells
   for (int y = startY; y <= endY; y++) {
     for (int x = startX; x <= endX; x++) {
       Rectangle cellRect = { x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE };
       if (grid[y][x]) {
         DrawRectangleRec(cellRect, WHITE); // Draw filled cell
-      } else {
-        // DrawRectangleLinesEx(cellRect, 1, GRAY); // Draw empty cell outline
+      } 
+      else {
+        if(zoom > 0.5) DrawRectangleLinesEx(cellRect, 1, LIGHTGRAY); // Draw empty cell outline
       }
     }
   }
+  
+  
 }
