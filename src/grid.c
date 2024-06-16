@@ -1,62 +1,61 @@
-#include "grid.h"
-#include <math.h> // Include math.h for fabs
-#include <raylib.h>
 #include <stdio.h>
+#include <math.h>
+#include <raylib.h>
+#include "../lib/types.h"
+#include "../lib/consts.h"
+#include "grid.h"
+#include "input.h"
 
-int grid[GRID_HEIGHT][GRID_WIDTH] = { 0 }; // Initialize grid with all cells empty
+int grid[GRID_HEIGHT][GRID_WIDTH] = {0}; // Initialize grid with all cells empty
 
 v2 SnapToGrid(Vector2 pos) {
-  return (v2){ (int)(pos.x / CELL_SIZE) * CELL_SIZE + CELL_SIZE / 2.0f, (int)(pos.y / CELL_SIZE) * CELL_SIZE + CELL_SIZE / 2.0f };
+    return (v2){(int)(pos.x / CELL_SIZE) * CELL_SIZE + CELL_SIZE / 2.0f, (int)(pos.y / CELL_SIZE) * CELL_SIZE + CELL_SIZE / 2.0f};
 }
 
-void drawWire(v2 startPos, v2 endPos, bool drawHorizontalFirst, bool isPreview) {
-  v2 currentPos = startPos;
-  Color wireColor = isPreview ? (Color){255,255,255, 128 } : BLACK; // Slightly transparent color for preview
+void drawWire(DrawingState *state, bool isPreview) {
+    v2 currentPos = state->startPos;
+    Color wireColor = isPreview ? (Color){255, 255, 255, 128} : BLACK; // Slightly transparent color for preview
 
-  if (drawHorizontalFirst) {
-    while (currentPos.x != endPos.x) {
-      grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] = isPreview ? grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] : 1; // Update grid cell
-      DrawRectangleRec((Rectangle){ currentPos.x - CELL_SIZE / 2.0f, currentPos.y - CELL_SIZE / 2.0f, CELL_SIZE, CELL_SIZE }, wireColor);
-      currentPos.x += (endPos.x > currentPos.x) ? CELL_SIZE : -CELL_SIZE;
+    if (state->drawHorizontalFirst) {
+        while (currentPos.x != state->endPos.x) {
+            grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] = isPreview ? grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] : 1; // Update grid cell
+            DrawRectangleRec((Rectangle){currentPos.x - CELL_SIZE / 2.0f, currentPos.y - CELL_SIZE / 2.0f, CELL_SIZE, CELL_SIZE}, wireColor);
+            currentPos.x += (state->endPos.x > currentPos.x) ? CELL_SIZE : -CELL_SIZE;
+        }
+
+        while (currentPos.y != state->endPos.y) {
+            grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] = isPreview ? grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] : 1; // Update grid cell
+            DrawRectangleRec((Rectangle){currentPos.x - CELL_SIZE / 2.0f, currentPos.y - CELL_SIZE / 2.0f, CELL_SIZE, CELL_SIZE}, wireColor);
+            currentPos.y += (state->endPos.y > currentPos.y) ? CELL_SIZE : -CELL_SIZE;
+        }
+    } else {
+        while (currentPos.y != state->endPos.y) {
+            grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] = isPreview ? grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] : 1; // Update grid cell
+            DrawRectangleRec((Rectangle){currentPos.x - CELL_SIZE / 2.0f, currentPos.y - CELL_SIZE / 2.0f, CELL_SIZE, CELL_SIZE}, wireColor);
+            currentPos.y += (state->endPos.y > currentPos.y) ? CELL_SIZE : -CELL_SIZE;
+        }
+
+        while (currentPos.x != state->endPos.x) {
+            grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] = isPreview ? grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] : 1; // Update grid cell
+            DrawRectangleRec((Rectangle){currentPos.x - CELL_SIZE / 2.0f, currentPos.y - CELL_SIZE / 2.0f, CELL_SIZE, CELL_SIZE}, wireColor);
+            currentPos.x += (state->endPos.x > currentPos.x) ? CELL_SIZE : -CELL_SIZE;
+        }
     }
 
-    while (currentPos.y != endPos.y) {
-      grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] = isPreview ? grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] : 1; // Update grid cell
-      DrawRectangleRec((Rectangle){ currentPos.x - CELL_SIZE / 2.0f, currentPos.y - CELL_SIZE / 2.0f, CELL_SIZE, CELL_SIZE }, wireColor);
-      currentPos.y += (endPos.y > currentPos.y) ? CELL_SIZE : -CELL_SIZE;
-    }
-  } else {
-    while (currentPos.y != endPos.y) {
-      grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] = isPreview ? grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] : 1; // Update grid cell
-      DrawRectangleRec((Rectangle){ currentPos.x - CELL_SIZE / 2.0f, currentPos.y - CELL_SIZE / 2.0f, CELL_SIZE, CELL_SIZE }, wireColor);
-      currentPos.y += (endPos.y > currentPos.y) ? CELL_SIZE : -CELL_SIZE;
-    }
-
-    while (currentPos.x != endPos.x) {
-      grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] = isPreview ? grid[(int)(currentPos.y / CELL_SIZE)][(int)(currentPos.x / CELL_SIZE)] : 1; // Update grid cell
-      DrawRectangleRec((Rectangle){ currentPos.x - CELL_SIZE / 2.0f, currentPos.y - CELL_SIZE / 2.0f, CELL_SIZE, CELL_SIZE }, wireColor);
-      currentPos.x += (endPos.x > currentPos.x) ? CELL_SIZE : -CELL_SIZE;
-    }
-  }
-
-  // Draw the last cell where the mouse is currently at
-  grid[(int)(endPos.y / CELL_SIZE)][(int)(endPos.x / CELL_SIZE)] = isPreview ? grid[(int)(endPos.y / CELL_SIZE)][(int)(endPos.x / CELL_SIZE)] : 1; // Update grid cell
-  DrawRectangleRec((Rectangle){ endPos.x - CELL_SIZE / 2.0f, endPos.y - CELL_SIZE / 2.0f, CELL_SIZE, CELL_SIZE }, wireColor);
+    // Draw the last cell where the mouse is currently at
+    grid[(int)(state->endPos.y / CELL_SIZE)][(int)(state->endPos.x / CELL_SIZE)] = isPreview ? grid[(int)(state->endPos.y / CELL_SIZE)][(int)(state->endPos.x / CELL_SIZE)] : 1; // Update grid cell
+    DrawRectangleRec((Rectangle){state->endPos.x - CELL_SIZE / 2.0f, state->endPos.y - CELL_SIZE / 2.0f, CELL_SIZE, CELL_SIZE}, wireColor);
 }
 
-
-
-void drawGrid(float zoom, Vector2 offset) {
+void drawGrid(DrawingState *state) {
   // Calculate the visible area based on the zoom level and offset
+  int startX = -1 * (int)(state->offset.x / CELL_SIZE / state->zoom);
+  int startY = -1 * (int)(state->offset.y / CELL_SIZE / state->zoom);
 
-  offset.x = -1 * (int)(offset.x / CELL_SIZE / zoom);
-  offset.y = -1 * (int)(offset.y / CELL_SIZE / zoom);
 
+  int endX = (int)((-1 * state->offset.x) + (int)(GetScreenWidth() / state->zoom / CELL_SIZE)) + 1;
+  int endY = (int)((-1 * state->offset.y) + (int)(GetScreenHeight() / state->zoom / CELL_SIZE)) + 1;
 
-  int startX = (int)(offset.x);
-  int endX =   (int)(offset.x + (int)(GetScreenWidth()  / zoom / CELL_SIZE)) + 1;
-  int startY = (int)(offset.y);
-  int endY =   (int)(offset.y + (int)(GetScreenHeight() / zoom / CELL_SIZE)) + 1;
 
   // Clamp the visible area to the grid boundaries
   startX = fmax(startX, 0);
@@ -67,15 +66,15 @@ void drawGrid(float zoom, Vector2 offset) {
   // Draw only the visible cells
   for (int y = startY; y <= endY; y++) {
     for (int x = startX; x <= endX; x++) {
-      Rectangle cellRect = { x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE };
+      Rectangle cellRect = {x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE};
       if (grid[y][x]) {
-        DrawRectangleRec(cellRect, WHITE); // Draw filled cell
-      } 
-      else {
-        if(zoom > 0.5) DrawRectangleLinesEx(cellRect, 1, LIGHTGRAY); // Draw empty cell outline
+          DrawRectangleRec(cellRect, WHITE); // Draw filled cell
+      } else {
+        if (state->zoom > 0.5) {
+          
+          DrawPixel(x * CELL_SIZE + CELL_SIZE / 2, y * CELL_SIZE + CELL_SIZE / 2, LIGHTGRAY); // Draw a single point
+        }
       }
     }
   }
-  
-  
 }

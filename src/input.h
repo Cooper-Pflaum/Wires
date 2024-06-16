@@ -2,24 +2,14 @@
 #define INPUT_H
 
 #include "raylib.h"
-#include "grid.h"
+#include "../lib/types.h"
+#include "../lib/consts.h"
 
 
-struct DrawingState {
-    v2 startPos;
-    v2 endPos; 
-    bool isDrawing;
-    bool drawHorizontalFirst;
-    bool directionSet;
-    float zoom;
-    Vector2 offset;
-};
+void HandleInput(DrawingState *state);
 
+void HandleDrawingInput(DrawingState *state, v2 mousePos);
 
-void HandleInput(struct DrawingState *state);
-
-void HandleDrawingInput(struct DrawingState *state, Vector2 mousePos);
-
-void HandleDrawingRelease(struct DrawingState *state, Vector2 mousePos);
+void HandleDrawingRelease(DrawingState *state, v2 mousePos);
 
 #endif // INPUT_H

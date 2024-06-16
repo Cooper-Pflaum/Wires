@@ -7,20 +7,11 @@ CFLAGS = -Wall -Wextra
 # Linker flags
 LDFLAGS = -lraylib -lm
 
-# Source directory
-SRCDIR = src
-
-# Build directory
-BUILDDIR = build
-
-# Include directory
-INCDIR = include
-
 # Source files
-SRCS = $(wildcard $(SRCDIR)/*.c)
+SRCS = src/main.c src/grid.c src/input.c
 
 # Object files
-OBJS = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRCS))
+OBJS = $(SRCS:.c=.o)
 
 # Executable name
 TARGET = main
@@ -30,16 +21,15 @@ all: $(TARGET)
 
 # Rule to link the executable
 $(TARGET): $(OBJS)
-	$(CC) $^ -o $@ $(LDFLAGS)
+	$(CC) $(OBJS) -o $(TARGET) $(LDFLAGS)
 
 # Rule to compile source files into object files
-$(BUILDDIR)/%.o: $(SRCDIR)/%.c
-	@mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) -I$(INCDIR) -c $< -o $@
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 # Clean rule to remove object files and the executable
 clean:
-	rm -rf $(BUILDDIR) $(TARGET)
+	rm -f $(OBJS) $(TARGET)
 
 # Phony targets
 .PHONY: all clean

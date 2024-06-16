@@ -1,6 +1,9 @@
-#include <raylib.h>
 #include <stdio.h>
-#include <math.h> // Include math.h for fabs
+#include <math.h>
+#include <raylib.h>
+#include "../lib/types.h"
+#include "../lib/consts.h"
+#include "grid.h"
 #include "input.h"
 
 
@@ -8,12 +11,9 @@
 
 
 
-
-
-
-void HandleInput(struct DrawingState *state) {
-    Vector2 mousePos = GetMousePosition();
-    Vector2 mouseDelta = GetMouseDelta();
+void HandleInput(DrawingState *state) {
+    v2 mousePos = GetMousePosition();
+    v2 mouseDelta = GetMouseDelta();
     float mouseWheel = GetMouseWheelMove();
 
     // Handle zoom
@@ -28,8 +28,8 @@ void HandleInput(struct DrawingState *state) {
 
         if (state->offset.x > 0) state->offset.x = 0;
         if (state->offset.y > 0) state->offset.y = 0;
-        // if (state->offset.x < GetScreenWidth() * CELL_SIZE * GRID_WIDTH) state->offset.x = -GetScreenWidth() * CELL_SIZE * GRID_WIDTH - GetScreenWidth();
-        // if (state->offset.y < GetScreenHeight() * CELL_SIZE * GRID_HEIGHT) state->offset.y = -GetScreenHeight() * CELL_SIZE * GRID_HEIGHT - GetScreenHeight();
+        if (state->offset.x < -CELL_SIZE * GRID_WIDTH * state->zoom) state->offset.x = -CELL_SIZE * GRID_WIDTH * state->zoom;
+        if (state->offset.y < -CELL_SIZE * GRID_HEIGHT * state->zoom) state->offset.y = -CELL_SIZE * GRID_HEIGHT * state->zoom;
     }
 
     // Handle drawing
@@ -41,7 +41,7 @@ void HandleInput(struct DrawingState *state) {
 }
 
 
-void HandleDrawingInput(struct DrawingState *state, Vector2 mousePos) {
+void HandleDrawingInput(DrawingState *state, v2 mousePos) {
     if (!state->isDrawing) {
         state->startPos = SnapToGrid((v2){ (mousePos.x - state->offset.x) / state->zoom, (mousePos.y - state->offset.y) / state->zoom });
         state->isDrawing = true;
@@ -62,10 +62,10 @@ void HandleDrawingInput(struct DrawingState *state, Vector2 mousePos) {
     }
 }
 
-void HandleDrawingRelease(struct DrawingState *state, Vector2 mousePos) {
+void HandleDrawingRelease(DrawingState *state, v2 mousePos) {
     state->endPos = SnapToGrid((v2){ (mousePos.x - state->offset.x) / state->zoom, (mousePos.y - state->offset.y) / state->zoom });
     if (state->endPos.x != state->startPos.x || state->endPos.y != state->startPos.y) {
-        drawWire(state->startPos, state->endPos, state->drawHorizontalFirst, false); // Draw the final wire
+        drawWire(state, false); // Draw the final wire
         int endCellX = (int)(state->endPos.x / CELL_SIZE);
         int endCellY = (int)(state->endPos.y / CELL_SIZE);
         grid[endCellY][endCellX] = 1;

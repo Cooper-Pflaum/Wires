@@ -1,20 +1,14 @@
 #ifndef GRID_H
 #define GRID_H
 
-
-#define GRID_WIDTH 500
-#define GRID_HEIGHT 500
-#define CELL_SIZE 20
-
-
-
 #include "raylib.h"
-typedef Vector2 v2;
+#include "../lib/types.h"
+#include "../lib/consts.h"
 
 extern int grid[GRID_HEIGHT][GRID_WIDTH]; // Declare the grid array
 
-v2 SnapToGrid(Vector2 pos);
-void drawWire(v2 startPos, v2 endPos, bool drawHorizontalFirst, bool isPreview);
-void drawGrid(float zoom, Vector2 offset); // Add the prototype for DrawGrid
+v2 SnapToGrid(v2 pos);
+void drawWire(DrawingState *state, bool isPreview);
+void drawGrid(DrawingState *state);
 
 #endif // GRID_H
