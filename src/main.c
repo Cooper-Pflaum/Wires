@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include "raylib.h"
+#include "raymath.h"
 #include "../lib/types.h"
 #include "../lib/consts.h"
+#define RAYGUI_IMPLEMENTATION
 #include "../lib/raygui.h"
 #include "grid.h"
 #include "input.h"
