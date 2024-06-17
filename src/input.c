@@ -31,6 +31,10 @@ void HandleInput(DrawingState *state) {
         if (state->offset.x < -CELL_SIZE * GRID_WIDTH * state->zoom) state->offset.x = -CELL_SIZE * GRID_WIDTH * state->zoom;
         if (state->offset.y < -CELL_SIZE * GRID_HEIGHT * state->zoom) state->offset.y = -CELL_SIZE * GRID_HEIGHT * state->zoom;
     }
+    char zoomText[32];
+    sprintf(zoomText, "Zoom: %.2f", -CELL_SIZE * GRID_WIDTH * state->zoom);
+    DrawText(zoomText, 0, 20, 20, WHITE);
+
 
     // Handle drawing
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
