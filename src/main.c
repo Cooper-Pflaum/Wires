@@ -40,17 +40,10 @@ int main() {
     }
 
     drawGrid(&state); // Pass the state struct pointer
-
+    GuiMessageBox((Rectangle){ 85, 70, 250, 100 },
+                    "#191#Message Box", "Hi! This is a message!", "Nice;Cool");
     EndMode2D();
     DrawFPS(0, 0);
-    // char zoomText[32];
-    // sprintf(zoomText, "Zoom: %.2f", state.zoom);
-    // DrawText(zoomText, 0, 20, 20, WHITE);
-    //
-    // char offsetText[32];
-    // sprintf(offsetText, "Offset: %.2f, %.2f", -state.offset.x, -state.offset.y);
-    // DrawText(offsetText, 0, 40, 20, WHITE);
-
     EndDrawing();
   }
 
