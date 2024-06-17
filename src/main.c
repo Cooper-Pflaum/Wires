@@ -1,12 +1,15 @@
+
 #include <stdio.h>
-#include "raylib.h"
-#include "raymath.h"
-#include "../lib/types.h"
-#include "../lib/consts.h"
-#define RAYGUI_IMPLEMENTATION
-#include "../lib/raygui.h"
 #include "grid.h"
 #include "input.h"
+#include "../lib/types.h"
+#include "../lib/consts.h"
+
+#define RAYGUI_IMPLEMENTATION
+#include "../lib/raylibs/raygui.h"
+#include "../lib/raylibs/raymath.h"
+#include "raylib.h"
+
 
 DrawingState state = {
     .startPos = {0, 0},
@@ -40,14 +43,13 @@ int main() {
 
     EndMode2D();
     DrawFPS(0, 0);
-    char zoomText[32];
-    sprintf(zoomText, "Zoom: %.2f", state.zoom);
-    DrawText(zoomText, 0, 20, 20, WHITE);
-
-    char offsetText[32];
-    sprintf(offsetText, "Offset: %.2f, %.2f", -state.offset.x, -state.offset.y);
-    DrawText(offsetText, 0, 40, 20, WHITE);
-
+    // char zoomText[32];
+    // sprintf(zoomText, "Zoom: %.2f", state.zoom);
+    // DrawText(zoomText, 0, 20, 20, WHITE);
+    //
+    // char offsetText[32];
+    // sprintf(offsetText, "Offset: %.2f, %.2f", -state.offset.x, -state.offset.y);
+    // DrawText(offsetText, 0, 40, 20, WHITE);
 
     EndDrawing();
   }

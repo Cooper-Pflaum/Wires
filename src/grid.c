@@ -72,7 +72,7 @@ void drawGrid(DrawingState *state) {
       } else {
         if (state->zoom > 0.5) {
           
-          DrawPixel(x * CELL_SIZE + CELL_SIZE / 2, y * CELL_SIZE + CELL_SIZE / 2, LIGHTGRAY); // Draw a single point
+          // DrawPixel(x * CELL_SIZE + CELL_SIZE / 2, y * CELL_SIZE + CELL_SIZE / 2, LIGHTGRAY); // Draw a single point
         }
       }
     }

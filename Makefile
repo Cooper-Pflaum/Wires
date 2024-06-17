@@ -2,10 +2,10 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra -Wno-unused-parameter -I./lib/raylibs
 
 # Linker flags
-LDFLAGS = -lraylib -lm
+LDFLAGS = -lraylib -lm -lGL -lX11 -lpthread -ldl -lrt
 
 # Source directory
 SRCDIR = src
@@ -14,7 +14,7 @@ SRCDIR = src
 BUILDDIR = build
 
 # Include directory
-INCDIR = include
+INCDIR = inc
 
 # Source files
 SRCS = $(wildcard $(SRCDIR)/*.c)
