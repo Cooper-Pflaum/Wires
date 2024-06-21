@@ -6,10 +6,8 @@
 #include "../lib/consts.h"
 
 
-void HandleInput(DrawingState *state);
-
-void HandleDrawingInput(DrawingState *state, v2 mousePos);
-
-void HandleDrawingRelease(DrawingState *state, v2 mousePos);
+// void HandleInput(DrawingState *state);
+// void HandleDrawingInput(DrawingState *state, v2 mousePos);
+// void HandleDrawingRelease(DrawingState *state, v2 mousePos);
 
 #endif // INPUT_H
