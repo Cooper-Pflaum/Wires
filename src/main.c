@@ -13,7 +13,7 @@
 
 struct World world = {
   .offset = {0.0f, 0.0f},
-  .zoom   = 3.0f,
+  .zoom   = 10.0f,
 };
 
 struct Drawing drawing = {
@@ -26,22 +26,39 @@ struct Drawing drawing = {
 
 
 
+
 int main() {
   SetTraceLogLevel(LOG_ERROR);
-  // SetConfigFlags(FLAG_VSYNC_HINT);
+  SetConfigFlags(FLAG_VSYNC_HINT);
   InitWindow(W, H, "Drawable Grid");
+
+
+  for(int i = 0; i < GRID_WIDTH*GRID_HEIGHT; i++){
+    world.grid[i].state = 0;
+    world.grid[i].color = (Color){255 * (i/256), 255 * (i/256), 255 * (i/256), 255};
+    world.grid[i].pos = (v2) { (int)(i/GRID_WIDTH) * CELL_SIZE, (int)(i%GRID_HEIGHT) * CELL_SIZE};
+  }
+
 
   while (!WindowShouldClose()) {
     BeginDrawing();
-    ClearBackground(BLACK);
+    ClearBackground(WHITE);
 
-    // BeginMode2D((Camera2D){.offset = {world.offset.x + MENU_OFFSET, world.offset.y}, .target = {0, 0}, .rotation = 0.0f, .zoom = world.zoom});
+    
+
+    BeginMode2D((Camera2D){.offset = {world.offset.x, world.offset.y}, .target = {0, 0}, .rotation = 0.0f, .zoom = world.zoom});
+
+
+    // Draw all squares in the grid
+    // for (int i = 0; i < GRID_WIDTH * GRID_HEIGHT; i++) {
+    //   DrawRectangle(world.grid[i].pos.x, world.grid[i].pos.y, CELL_SIZE, CELL_SIZE, world.grid[i].color);
+    // }
     //   HandleInput(&drawing);
     //   if (drawing.isDrawing) {
     //     drawWire(&drawing, true, (Color){state.color.r, state.color.g, state.color.b, 100}); // Pass the state struct pointer and isPreview flag
     //   }
-    //   drawGrid(&drawing); // Pass the state struct pointer
-    // EndMode2D();
+      drawGrid(&world); // Pass the state struct pointer
+    EndMode2D();
 
     DrawFPS(0, 0);
     EndDrawing();

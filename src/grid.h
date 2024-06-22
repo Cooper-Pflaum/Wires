@@ -11,4 +11,5 @@
 // void drawWire(DrawingState *state, bool isPreview, Color wire_color);
 // void drawGrid(DrawingState *state);
 
+void drawGrid(struct World *world);
 #endif // GRID_H

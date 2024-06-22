@@ -52,22 +52,18 @@
 // }
 //
 //
-// void drawGrid(DrawingState *state) {
-//     // Calculate the visible area based on the zoom level and offset
-//     int startX = fmax(-1 * (int)(state->offset.x / CELL_SIZE / state->zoom), 0);
-//     int startY = fmax(-1 * (int)(state->offset.y / CELL_SIZE / state->zoom), 0);
-//     int endX   = fmin((int)((-1 * state->offset.x) + (GetScreenWidth()) / state->zoom / CELL_SIZE) + 1, GRID_WIDTH - 1);
-//     int endY   = fmin((int)((-1 * state->offset.y) + GetScreenHeight() / state->zoom / CELL_SIZE) + 1, GRID_HEIGHT - 1);
-//
-//     // Draw only the visible cells
-//     for(int y = startY; y <= endY; y++) {
-//       for(int x = startX; x <= endX; x++) {
-//         Rectangle cellRect = {x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE};
-//         if (grid[y][x]) {
-//           DrawRectangleRec(cellRect, WHITE); // Draw filled cell
-//         } else if (state->zoom > 1.0) {
-//           // DrawPixel(x * CELL_SIZE + CELL_SIZE / 2, y * CELL_SIZE + CELL_SIZE / 2, LIGHTGRAY); // Draw a single point
-//         }
-//       }
-//     }
-// }
+void drawGrid(struct World *world) {
+    // // Calculate the visible area based on the zoom level and offset
+    int startX = fmax(-1 * (int)(world->offset.x / CELL_SIZE / world->zoom), 0);
+    int startY = fmax(-1 * (int)(world->offset.y / CELL_SIZE / world->zoom), 0);
+    int endX   = fmin((int)((-1 * world->offset.x) + W / world->zoom / CELL_SIZE) + 1, GRID_WIDTH - 1);
+    int endY   = fmin((int)((-1 * world->offset.y) + H / world->zoom / CELL_SIZE) + 1, GRID_HEIGHT - 1);
+
+    // Draw only the visible cells
+    for(int x = startX; x <= endX; x++) {
+      for(int y = startY; y <= endY; y++) {
+        Rectangle cellRect = {x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE};
+        DrawRectangleRec(cellRect, world->grid[y+(x*GRID_HEIGHT)].color);
+      }
+    }
+}
