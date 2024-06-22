@@ -10,4 +10,5 @@
 // void HandleDrawingInput(DrawingState *state, v2 mousePos);
 // void HandleDrawingRelease(DrawingState *state, v2 mousePos);
 
+void HandleInput(struct World *world, struct Input *inputs);
 #endif // INPUT_H

@@ -22,6 +22,7 @@ typedef Vector3  v3;
 typedef struct {
   u8 state;
   u8 type;
+  u8 databits;
   v2 pos;
   Color color;
 } Cell;
@@ -32,7 +33,7 @@ struct World{
   Cell grid [GRID_WIDTH*GRID_HEIGHT];
 };
 
-struct Drawing{
+struct Input{
   u8 type;
   u8 state;
   Color color;
@@ -42,9 +43,6 @@ struct Drawing{
   bool drawHorizontalFirst;
   bool directionSet;
 };
-
-
-
 
 
 // typedef int8_t   i8;

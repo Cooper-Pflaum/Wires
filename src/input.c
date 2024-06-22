@@ -11,42 +11,42 @@
 
 
 
-// void HandleInput(DrawingState *state) {
-//     v2 mousePos = GetMousePosition();
-//     v2 mouseDelta = GetMouseDelta();
-//     float mouseWheel = GetMouseWheelMove();
-//
-//     // Handle zoom
-//     state->zoom += mouseWheel * 0.1f;
-//     if (state->zoom < 0.1f) state->zoom = 0.1f;
-//     if (state->zoom > 3.0f) state->zoom = 3.0f;
-//
-//     // Handle panning
-//     if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) {
-//         state->offset.x += mouseDelta.x;
-//         state->offset.y += mouseDelta.y;
-//
-//         if (state->offset.x > 0) state->offset.x = 0;
-//         if (state->offset.y > 0) state->offset.y = 0;
-//         if (state->offset.x < -CELL_SIZE * GRID_WIDTH * state->zoom) state->offset.x = -CELL_SIZE * GRID_WIDTH * state->zoom;
-//         if (state->offset.y < -CELL_SIZE * GRID_HEIGHT * state->zoom) state->offset.y = -CELL_SIZE * GRID_HEIGHT * state->zoom;
-//     }
-//     // char zoomText[32];
-//     // sprintf(zoomText, "Zoom: %.2f", state->zoom);
-//     // DrawText(zoomText, 0, 20, 20, WHITE);
-//
-//
-//     mousePos.x -= MENU_OFFSET;
-//
-//     // Handle drawing
-//     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-//         HandleDrawingInput(state, mousePos);
-//     } else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-//         HandleDrawingRelease(state, mousePos);
-//     }
-// }
-//
-//
+void HandleInput(struct World *world, struct Input *inputs){
+    v2 mousePos = GetMousePosition();
+    v2 mouseDelta = GetMouseDelta();
+    float mouseWheel = GetMouseWheelMove();
+
+    // Handle zoom
+    world->zoom += mouseWheel * 0.5f;
+    if (world->zoom < 1.0f) world->zoom = 1.0f;
+    if (world->zoom > 10.0f) world->zoom = 10.0f;
+
+    // Handle panning
+    if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) {
+        world->offset.x += mouseDelta.x;
+        world->offset.y += mouseDelta.y;
+
+        if (world->offset.x > 0) world->offset.x = 0;
+        if (world->offset.y > 0) world->offset.y = 0;
+        if (world->offset.x < -CELL_SIZE * GRID_WIDTH * world->zoom) world->offset.x = -CELL_SIZE * GRID_WIDTH * world->zoom;
+        if (world->offset.y < -CELL_SIZE * GRID_HEIGHT * world->zoom) world->offset.y = -CELL_SIZE * GRID_HEIGHT * world->zoom;
+    }
+    // char zoomText[32];
+    // sprintf(zoomText, "Zoom: %.2f", state->zoom);
+    // DrawText(zoomText, 0, 20, 20, WHITE);
+
+
+    // mousePos.x -= MENU_OFFSET;
+
+    // // Handle drawing
+    // if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+    //     HandleDrawingInput(state, mousePos);
+    // } else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+    //     HandleDrawingRelease(state, mousePos);
+    // }
+}
+
+
 // void HandleDrawingInput(DrawingState *state, v2 mousePos) {
 //     if (!state->isDrawing) {
 //         state->startPos = SnapToGrid((v2){ (mousePos.x - state->offset.x) / state->zoom, (mousePos.y - state->offset.y) / state->zoom });

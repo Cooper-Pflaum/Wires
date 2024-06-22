@@ -3,7 +3,7 @@
 
 #define GRID_WIDTH  2000
 #define GRID_HEIGHT 2000
-#define CELL_SIZE   10
+#define CELL_SIZE   3
 
 #define W           1920
 #define H           1080
