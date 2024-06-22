@@ -2,11 +2,11 @@
 #define UTILS_H
 
 #include <math.h>
+#include "../lib/types.h"
 
-static inline float Clamp(float value, float min, float max) {
+inline f32 Clamp(f32 value, f32 min, f32 max) {
     return fmaxf(min, fminf(value, max));
 }
 
-// You can add other utility functions here as needed
 
 #endif // UTILS_H

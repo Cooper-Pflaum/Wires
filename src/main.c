@@ -31,18 +31,25 @@ int main(){
   SetConfigFlags(FLAG_VSYNC_HINT);
   InitWindow(W, H, "Drawable Grid");
   int i = 0;
+  int j = 0;
   for(int y = 0; y < GRID_WIDTH; y++){
     for(int x = 0; x < GRID_HEIGHT; x++){
       world.grid[i].state = 0;
       world.grid[i].color = BLACK;
       world.grid[i].pos = (v2) { (u16)(i%GRID_WIDTH) * CELL_SIZE, (u16)(i/GRID_HEIGHT) * CELL_SIZE};
-      world.grid[i%3+0].color = (Color){ 255, 0, 0, 255 };
-      world.grid[i%3+1].color = (Color){ 0, 255, 0, 255 };
-      world.grid[i%2+1].color = (Color){ 0, 0, 255, 255 };
-
       i++;
     }
+    world.grid[j*j].color = (Color){ 255, 0, 0, 255 };
+
+    j++;
   }
+
+
+  world.grid[GRID_WIDTH*GRID_HEIGHT-1].color = (Color){ 255, 0, 0, 255 };
+  world.grid[GRID_WIDTH*GRID_HEIGHT-2].color = (Color){ 0, 255, 0, 255 };
+  world.grid[GRID_WIDTH*GRID_HEIGHT-3].color = (Color){ 0, 0, 255, 255 };
+
+
 
 
   while (!WindowShouldClose()) {
@@ -55,9 +62,6 @@ int main(){
     EndMode2D();
 
 
-    char posText[32];
-    sprintf(posText, "Pos: %.1f, %.1f", world.offset.x, world.offset.y);
-    DrawText(posText, 0, 20, 20, GREEN);
     // Draw all squares in the grid
 
     //   if (drawing.isDrawing) {
@@ -65,6 +69,10 @@ int main(){
     //   }
 
     DrawFPS(0,0);
+    char posText[32];
+    sprintf(posText, "Pos: %.1f, %.1f", world.offset.x, world.offset.y);
+    DrawText(posText, 0, 20, 20, GREEN);
+
     EndDrawing();
   }
 
