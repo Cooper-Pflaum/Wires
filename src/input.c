@@ -1,50 +1,49 @@
 #include <stdio.h>
 #include <math.h>
 #include <raylib.h>
-#include "../lib/types.h"
-#include "../lib/consts.h"
+#include "utils.h"
 #include "grid.h"
 #include "input.h"
+#include "../lib/types.h"
+#include "../lib/consts.h"
 
 
 
 
 
 
-void HandleInput(struct World *world, struct Input *inputs){
-    v2 mousePos = GetMousePosition();
-    v2 mouseDelta = GetMouseDelta();
-    float mouseWheel = GetMouseWheelMove();
-
+void HandleInput(struct World *world, struct Input *inputs) {
     // Handle zoom
-    world->zoom += mouseWheel * 0.5f;
-    if (world->zoom < 1.0f) world->zoom = 1.0f;
-    if (world->zoom > 10.0f) world->zoom = 10.0f;
+    float zoomDelta = GetMouseWheelMove() * 0.5f;
+    world->zoom = Clamp(world->zoom + zoomDelta, 1.0f, 10.0f);
 
     // Handle panning
     if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) {
+        v2 mouseDelta = GetMouseDelta();
         world->offset.x += mouseDelta.x;
         world->offset.y += mouseDelta.y;
 
-        if (world->offset.x > 0) world->offset.x = 0;
-        if (world->offset.y > 0) world->offset.y = 0;
-        if (world->offset.x < -CELL_SIZE * GRID_WIDTH * world->zoom) world->offset.x = -CELL_SIZE * GRID_WIDTH * world->zoom;
-        if (world->offset.y < -CELL_SIZE * GRID_HEIGHT * world->zoom) world->offset.y = -CELL_SIZE * GRID_HEIGHT * world->zoom;
+        // Calculate bounds
+        float maxOffsetX = 0;
+        float maxOffsetY = 0;
+        float minOffsetX = W - CELL_SIZE * GRID_WIDTH * world->zoom;
+        float minOffsetY = H - CELL_SIZE * GRID_HEIGHT * world->zoom;
+
+        // Clamp offset within bounds
+        world->offset.x = Clamp(world->offset.x, minOffsetX, maxOffsetX);
+        world->offset.y = Clamp(world->offset.y, minOffsetY, maxOffsetY);
     }
-    // char zoomText[32];
-    // sprintf(zoomText, "Zoom: %.2f", state->zoom);
-    // DrawText(zoomText, 0, 20, 20, WHITE);
-
-
-    // mousePos.x -= MENU_OFFSET;
-
-    // // Handle drawing
-    // if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-    //     HandleDrawingInput(state, mousePos);
-    // } else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-    //     HandleDrawingRelease(state, mousePos);
-    // }
 }
+
+
+  // mousePos.x -= MENU_OFFSET;
+
+  // // Handle drawing
+  // if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+  //     HandleDrawingInput(state, mousePos);
+  // } else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+  //     HandleDrawingRelease(state, mousePos);
+  // }
 
 
 // void HandleDrawingInput(DrawingState *state, v2 mousePos) {

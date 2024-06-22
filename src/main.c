@@ -1,5 +1,7 @@
 
 #include <stdio.h>
+#include <math.h>
+
 #include "grid.h"
 #include "input.h"
 #include "../lib/types.h"
@@ -34,32 +36,35 @@ int main(){
       world.grid[i].state = 0;
       world.grid[i].color = BLACK;
       world.grid[i].pos = (v2) { (u16)(i%GRID_WIDTH) * CELL_SIZE, (u16)(i/GRID_HEIGHT) * CELL_SIZE};
+      world.grid[i%3+0].color = (Color){ 255, 0, 0, 255 };
+      world.grid[i%3+1].color = (Color){ 0, 255, 0, 255 };
+      world.grid[i%2+1].color = (Color){ 0, 0, 255, 255 };
+
       i++;
     }
   }
 
-  world.grid[0].color = (Color){ 255, 0, 0, 255 };
-  world.grid[1].color = (Color){ 0, 255, 0, 255 };
-  world.grid[2].color = (Color){ 0, 0, 255, 255 };
 
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(WHITE);
 
     BeginMode2D((Camera2D){.offset = {world.offset.x, world.offset.y}, .target = {0, 0}, .rotation = 0.0f, .zoom = world.zoom});
-
       HandleInput(&world, &inputs);
       drawGrid(&world);
     EndMode2D();
 
 
+    char posText[32];
+    sprintf(posText, "Pos: %.1f, %.1f", world.offset.x, world.offset.y);
+    DrawText(posText, 0, 20, 20, GREEN);
     // Draw all squares in the grid
 
     //   if (drawing.isDrawing) {
     //     drawWire(&drawing, true, (Color){state.color.r, state.color.g, state.color.b, 100}); // Pass the state struct pointer and isPreview flag
     //   }
 
-    DrawFPS(0, 0);
+    DrawFPS(0,0);
     EndDrawing();
   }
 

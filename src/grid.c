@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <math.h>
 #include <raylib.h>
-#include "../lib/types.h"
-#include "../lib/consts.h"
+#include "utils.h"
 #include "grid.h"
 #include "input.h"
+#include "../lib/types.h"
+#include "../lib/consts.h"
 
 
 
