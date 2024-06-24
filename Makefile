@@ -2,7 +2,7 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall -Wextra -Wno-unused-parameter -I./lib/raylibs
+CFLAGS = -Wall -Wextra -Wno-unused-parameter -I./lib/raylibs 
 
 # Linker flags
 LDFLAGS = -lraylib -lm -lGL -lX11 -lpthread -ldl -lrt

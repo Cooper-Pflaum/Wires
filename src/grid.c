@@ -10,9 +10,7 @@
 
 
 
-// v2 SnapToGrid(Vector2 pos) {
-//     return (v2){(int)(pos.x / CELL_SIZE) * CELL_SIZE + CELL_SIZE / 2.0f, (int)(pos.y / CELL_SIZE) * CELL_SIZE + CELL_SIZE / 2.0f};
-// }
+
 
 
 // void drawCell(v2 pos, bool isPreview, Color wireColor) {
@@ -36,7 +34,7 @@
 //         while (currentPos->y != endPos.y) {
 //             drawCell(*currentPos, isPreview, wireColor);
 //             currentPos->y += (endPos.y > currentPos->y) ? CELL_SIZE : -CELL_SIZE;
-//         }
+//    }
 //         while (currentPos->x != endPos.x) {
 //             drawCell(*currentPos, isPreview, wireColor);
 //             currentPos->x += (endPos.x > currentPos->x) ? CELL_SIZE : -CELL_SIZE;
@@ -67,7 +65,10 @@ void drawGrid(struct World *world){
   // Draw only the visible cells
   for (u16 x = startX; x <= endX; x++) {
     for (u16 y = startY; y <= endY; y++) {
-      DrawRectangle(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, world->grid[x + (y * GRID_WIDTH)].color);
+      if(world->grid[x+(y*GRID_WIDTH)].type != 0){
+        DrawRectangle(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, world->grid[x + (y * GRID_WIDTH)].color);
+        // DrawRectangleLines(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, WHITE);
+      }
     }
   }
 }

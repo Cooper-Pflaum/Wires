@@ -13,26 +13,45 @@
 
 
 void HandleInput(struct World *world, struct Input *inputs) {
-    // Handle zoom
-    float zoomDelta = GetMouseWheelMove() * 0.5f;
-    world->zoom = Clamp(world->zoom + zoomDelta, 1.0f, 10.0f);
+  // Handle zoom
+  float zoomDelta = GetMouseWheelMove() * 0.5f;
+  world->zoom = _clamp(world->zoom + zoomDelta, 1.0f, 10.0f);
 
-    // Handle panning
-    if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) {
-        v2 mouseDelta = GetMouseDelta();
-        world->offset.x += mouseDelta.x;
-        world->offset.y += mouseDelta.y;
+  // Handle panning
+  if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) {
+    v2 mouseDelta = GetMouseDelta();
+    world->offset.x += mouseDelta.x;
+    world->offset.y += mouseDelta.y;
 
-        // Calculate bounds
-        float maxOffsetX = 0;
-        float maxOffsetY = 0;
-        float minOffsetX = W - CELL_SIZE * GRID_WIDTH * world->zoom;
-        float minOffsetY = H - CELL_SIZE * GRID_HEIGHT * world->zoom;
+    // Calculate bounds and clamp offset within bounds
+    world->offset.x = _clamp(world->offset.x, W - CELL_SIZE * GRID_WIDTH * world->zoom, 0); // value, minX, maxX
+    world->offset.y = _clamp(world->offset.y, H - CELL_SIZE * GRID_HEIGHT * world->zoom, 0); // value, minY, maxY
+  }
 
-        // Clamp offset within bounds
-        world->offset.x = Clamp(world->offset.x, minOffsetX, maxOffsetX);
-        world->offset.y = Clamp(world->offset.y, minOffsetY, maxOffsetY);
+  if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+    v2 mousePos = GetMousePosition();
+
+
+
+    if(!inputs->isDrawing){
+      inputs->startPos = (v2) {
+        (u16)((mousePos.x - world->offset.x) / CELL_SIZE / world->zoom), 
+        (u16)((mousePos.y - world->offset.y) / CELL_SIZE / world->zoom)
+      };
+      // inputs->startPos = _snapToGrid(inputs->startPos, CELL_SIZE);
+      world->grid[(u32)(inputs->startPos.x + (inputs->startPos.y * GRID_WIDTH))].color = WHITE;
+      world->grid[(u32)(inputs->startPos.x + (inputs->startPos.y * GRID_WIDTH))].type = 1;
+
+      // inputs->startPos = _snapToGrid((v2){ (mousePos.x - world->offset.x) / world->zoom, (mousePos.y - world->offset.y) / world->zoom }, CELL_SIZE);
+      DrawFPS(0,0);
+      char posText[32];
+      sprintf(posText, "Pos: %.1f, %.1f", inputs->startPos.x, inputs->startPos.y);
+      DrawText(posText, 0, 40, 20, GREEN);
     }
+  }
+  else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)){
+  
+  }
 }
 
 
@@ -48,7 +67,7 @@ void HandleInput(struct World *world, struct Input *inputs) {
 
 // void HandleDrawingInput(DrawingState *state, v2 mousePos) {
 //     if (!state->isDrawing) {
-//         state->startPos = SnapToGrid((v2){ (mousePos.x - state->offset.x) / state->zoom, (mousePos.y - state->offset.y) / state->zoom });
+//     state->startPos = SnapToGrid((v2){ (mousePos.x - state->offset.x) / state->zoom, (mousePos.y - state->offset.y) / state->zoom });
 //         state->isDrawing = true;
 //         state->directionSet = false; // Reset direction when starting a new drawing
 //     }

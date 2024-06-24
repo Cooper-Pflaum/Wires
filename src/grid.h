@@ -7,7 +7,6 @@
 
 // extern int grid[GRID_HEIGHT][GRID_WIDTH]; // Declare the grid array
 
-// v2 SnapToGrid(v2 pos);
 // void drawWire(DrawingState *state, bool isPreview, Color wire_color);
 // void drawGrid(DrawingState *state);
 

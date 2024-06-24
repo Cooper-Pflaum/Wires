@@ -19,6 +19,7 @@ struct World world = {
 };
 
 struct Input inputs = {
+  .type = 0,
   .isDrawing = false,
   .drawHorizontalFirst = true,
   .directionSet = false,
@@ -26,35 +27,42 @@ struct Input inputs = {
 
 
 
-int main(){
+void init(){
   SetTraceLogLevel(LOG_ERROR);
-  SetConfigFlags(FLAG_VSYNC_HINT);
+  // SetConfigFlags(FLAG_VSYNC_HINT);
   InitWindow(W, H, "Drawable Grid");
+
   int i = 0;
   int j = 0;
   for(int y = 0; y < GRID_WIDTH; y++){
     for(int x = 0; x < GRID_HEIGHT; x++){
-      world.grid[i].state = 0;
-      world.grid[i].color = BLACK;
+      world.grid[i].type = 0;
       world.grid[i].pos = (v2) { (u16)(i%GRID_WIDTH) * CELL_SIZE, (u16)(i/GRID_HEIGHT) * CELL_SIZE};
       i++;
     }
     world.grid[j*j].color = (Color){ 255, 0, 0, 255 };
+    world.grid[j*j].type = 1;
 
     j++;
   }
 
+  world.grid[1].color = RED;
+  world.grid[2].color = GREEN;
+  world.grid[3].color = BLUE;
 
-  world.grid[GRID_WIDTH*GRID_HEIGHT-1].color = (Color){ 255, 0, 0, 255 };
-  world.grid[GRID_WIDTH*GRID_HEIGHT-2].color = (Color){ 0, 255, 0, 255 };
-  world.grid[GRID_WIDTH*GRID_HEIGHT-3].color = (Color){ 0, 0, 255, 255 };
+  world.grid[1].type = 1;
+  world.grid[2].type = 1;
+  world.grid[3].type = 1;
+}
 
 
 
+int main(){
+  init();
 
   while (!WindowShouldClose()) {
     BeginDrawing();
-    ClearBackground(WHITE);
+    ClearBackground(BLACK);
 
     BeginMode2D((Camera2D){.offset = {world.offset.x, world.offset.y}, .target = {0, 0}, .rotation = 0.0f, .zoom = world.zoom});
       HandleInput(&world, &inputs);
@@ -79,3 +87,7 @@ int main(){
   CloseWindow();
   return 0;
 }
+
+
+
+
