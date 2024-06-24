@@ -9,47 +9,6 @@
 
 
 
-
-
-
-
-// void drawCell(v2 pos, bool isPreview, Color wireColor) {
-//     int xIdx = (int)(pos.x / CELL_SIZE);
-//     int yIdx = (int)(pos.y / CELL_SIZE);
-//     if (!isPreview) grid[yIdx][xIdx] = 1;
-//     DrawRectangleRec((Rectangle){pos.x - CELL_SIZE / 2.0f, pos.y - CELL_SIZE / 2.0f, CELL_SIZE, CELL_SIZE}, wireColor);
-// }
-
-// void drawLine(v2 *currentPos, v2 endPos, bool horizontalFirst, bool isPreview, Color wireColor) {
-//     if (horizontalFirst) {
-//         while (currentPos->x != endPos.x) {
-//             drawCell(*currentPos, isPreview, wireColor);
-//             currentPos->x += (endPos.x > currentPos->x) ? CELL_SIZE : -CELL_SIZE;
-//         }
-//         while (currentPos->y != endPos.y) {
-//             drawCell(*currentPos, isPreview, wireColor);
-//             currentPos->y += (endPos.y > currentPos->y) ? CELL_SIZE : -CELL_SIZE;
-//         }
-//     } else {
-//         while (currentPos->y != endPos.y) {
-//             drawCell(*currentPos, isPreview, wireColor);
-//             currentPos->y += (endPos.y > currentPos->y) ? CELL_SIZE : -CELL_SIZE;
-//    }
-//         while (currentPos->x != endPos.x) {
-//             drawCell(*currentPos, isPreview, wireColor);
-//             currentPos->x += (endPos.x > currentPos->x) ? CELL_SIZE : -CELL_SIZE;
-//         }
-//     }
-//     drawCell(endPos, isPreview, wireColor); // Draw the final cell
-// }
-
-// void drawWire(DrawingState *state, bool isPreview, Color wire_color) {
-//     v2 currentPos = state->startPos;
-//     Color wireColor = isPreview ? wire_color : BLACK;
-//     drawLine(&currentPos, state->endPos, state->drawHorizontalFirst, isPreview, wireColor);
-// }
-
-
 void drawGrid(struct World *world){
   // Precompute values to reduce redundant calculations
   f32 invZoom = 1.0f / world->zoom;
@@ -70,6 +29,51 @@ void drawGrid(struct World *world){
         // DrawRectangleLines(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, WHITE);
       }
     }
+  }
+}
+
+
+void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
+  v2 currentPos = inputs->startPos;
+  Color wireColor = isPreview ? (Color){255, 255, 255, 100} : WHITE; // Semi-transparent white for preview, solid white for final
+
+  while (currentPos.x != inputs->endPos.x || currentPos.y != inputs->endPos.y) {
+    u32 index = (u32)(currentPos.x + (currentPos.y * GRID_WIDTH));
+
+    if (isPreview) {
+      // For preview, just draw the wire without updating the grid
+      DrawRectangle((currentPos.x + world->offset.x) * world->zoom, (currentPos.y + world->offset.y) * world->zoom, CELL_SIZE, CELL_SIZE, wireColor);
+    } else {
+      // For final wire, update the grid
+      world->grid[index].type = 1;
+      world->grid[index].color = wireColor;
+    }
+
+    // Update the current position
+    if (inputs->direction) {
+      // Move horizontally first
+      if (currentPos.x != inputs->endPos.x) {
+        currentPos.x += (inputs->endPos.x > currentPos.x) ? 1 : -1;
+      } else {
+        currentPos.y += (inputs->endPos.y > currentPos.y) ? 1 : -1;
+      }
+    } else {
+      // Move vertically first
+      if (currentPos.y != inputs->endPos.y) {
+        currentPos.y += (inputs->endPos.y > currentPos.y) ? 1 : -1;
+      } else {
+        currentPos.x += (inputs->endPos.x > currentPos.x) ? 1 : -1;
+      }
+    }
+  }
+
+  // Draw the last cell
+  u32 lastIndex = (u32)(currentPos.x + (currentPos.y * GRID_WIDTH));
+  if (isPreview) {
+    DrawRectangle((currentPos.x + world->offset.x) * world->zoom, (currentPos.y + world->offset.y) * world->zoom, CELL_SIZE, CELL_SIZE, wireColor);
+  } else {
+    world->grid[lastIndex].type = 1;
+    world->grid[lastIndex].color = wireColor;
   }
 }
 

@@ -21,7 +21,7 @@ struct World world = {
 struct Input inputs = {
   .type = 0,
   .isDrawing = false,
-  .drawHorizontalFirst = true,
+  .direction = false,
   .directionSet = false,
 };
 
@@ -32,27 +32,20 @@ void init(){
   // SetConfigFlags(FLAG_VSYNC_HINT);
   InitWindow(W, H, "Drawable Grid");
 
-  int i = 0;
-  int j = 0;
-  for(int y = 0; y < GRID_WIDTH; y++){
-    for(int x = 0; x < GRID_HEIGHT; x++){
+  for(int i = 0; i < GRID_WIDTH; i++){
+    for(int j = 0; j < GRID_HEIGHT; j++){
       world.grid[i].type = 0;
       world.grid[i].pos = (v2) { (u16)(i%GRID_WIDTH) * CELL_SIZE, (u16)(i/GRID_HEIGHT) * CELL_SIZE};
-      i++;
     }
-    world.grid[j*j].color = (Color){ 255, 0, 0, 255 };
-    world.grid[j*j].type = 1;
-
-    j++;
   }
 
-  world.grid[1].color = RED;
-  world.grid[2].color = GREEN;
-  world.grid[3].color = BLUE;
+  world.grid[0].color = RED;
+  world.grid[1].color = GREEN;
+  world.grid[2].color = BLUE;
 
+  world.grid[0].type = 1;
   world.grid[1].type = 1;
   world.grid[2].type = 1;
-  world.grid[3].type = 1;
 }
 
 

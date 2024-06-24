@@ -34,7 +34,7 @@ struct Input{
   v2 startPos;
   v2 endPos;
   bool isDrawing;
-  bool drawHorizontalFirst;
+  bool direction; // horizontal=1 | vertical=0 
   bool directionSet;
 };
 
