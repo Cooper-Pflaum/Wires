@@ -41,8 +41,8 @@ void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
     if (isPreview) {
       // For preview, just draw the wire without updating the grid
       DrawRectangle(
-        (currentPos.x + world->offset.x) * world->zoom,
-        (currentPos.y + world->offset.y) * world->zoom,
+        (currentPos.x * CELL_SIZE) + (world->offset.x * world->zoom),
+        (currentPos.y * CELL_SIZE) + (world->offset.y * world->zoom),
         CELL_SIZE,
         CELL_SIZE,
         wireColor
@@ -75,8 +75,8 @@ void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
   u32 lastIndex = (u32)(currentPos.x + (currentPos.y * GRID_WIDTH));
   if (isPreview) {
     DrawRectangle(
-      (currentPos.x + world->offset.x) * world->zoom,
-      (currentPos.y + world->offset.y) * world->zoom,
+      (currentPos.x * CELL_SIZE) + (world->offset.x * world->zoom),
+      (currentPos.y * CELL_SIZE) + (world->offset.y * world->zoom),
       CELL_SIZE,
       CELL_SIZE,
       wireColor
