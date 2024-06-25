@@ -48,6 +48,8 @@ void HandleInput(struct World *world, struct Input *inputs) {
       }
     }
 
+    inputs->endPos = gridPos;
+
     // Draw the preview wire
     drawWire(world, inputs, true);
   }
