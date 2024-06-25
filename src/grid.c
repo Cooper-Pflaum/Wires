@@ -34,7 +34,7 @@ void drawGrid(struct World *world){
 
 void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
   v2 currentPos = inputs->startPos;
-  Color wireColor = isPreview ? (Color){255, 0, 0, 100} : RED; // Semi-transparent white for preview, solid white for final
+  Color wireColor = isPreview ? (Color){inputs->color.r, inputs->color.g, inputs->color.b, 100} : inputs->color; // Semi-transparent white for preview, solid white for final
 
   while (currentPos.x != inputs->endPos.x || currentPos.y != inputs->endPos.y) {
     u32 index = (u32)(currentPos.x + (currentPos.y * GRID_WIDTH));
@@ -43,7 +43,7 @@ void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
       DrawRectangle((u32)(currentPos.x * CELL_SIZE), (u32)(currentPos.y * CELL_SIZE), CELL_SIZE, CELL_SIZE, wireColor);
     } else {
       // For final wire, update the grid
-      world->grid[index].type = 1;
+      world->grid[index].type = inputs->type;
       world->grid[index].color = wireColor;
     }
 
@@ -76,7 +76,7 @@ void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
       wireColor
     );
   } else {
-    world->grid[lastIndex].type = 1;
+    world->grid[lastIndex].type = inputs->type;
     world->grid[lastIndex].color = wireColor;
   }
 }

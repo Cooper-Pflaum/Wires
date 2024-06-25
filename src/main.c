@@ -19,7 +19,8 @@ struct World world = {
 };
 
 struct Input inputs = {
-  .type = 0,
+  .color = RED,
+  .type = 1,
   .isDrawing = false,
   .direction = false,
   .directionSet = false,
