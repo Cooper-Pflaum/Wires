@@ -55,11 +55,11 @@ int main(){
 
   while (!WindowShouldClose()) {
     BeginDrawing();
-    ClearBackground(GRAY);
+    ClearBackground(BLACK);
 
     BeginMode2D((Camera2D){.offset = {world.offset.x, world.offset.y}, .target = {0, 0}, .rotation = 0.0f, .zoom = world.zoom});
-      HandleInput(&world, &inputs);
       drawGrid(&world);
+      HandleInput(&world, &inputs);
     EndMode2D();
 
     DrawFPS(0,0);

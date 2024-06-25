@@ -24,10 +24,13 @@ void HandleInput(struct World *world, struct Input *inputs) {
 
   v2 mousePos = GetMousePosition();
   v2 gridPos = {
-    (u16)((mousePos.x / world->zoom + world->offset.x) / CELL_SIZE),
-    (u16)((mousePos.y / world->zoom + world->offset.y) / CELL_SIZE)
+    (u16)((mousePos.x - world->offset.x) / CELL_SIZE / world->zoom),
+    (u16)((mousePos.y - world->offset.y) / CELL_SIZE / world->zoom) 
   };
-
+  // printf(
+    // "Current grid pos: %.2f, %.2f\n",
+    // gridPos.x, gridPos.y
+  // );
   if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
     if (!inputs->isDrawing) {
       inputs->startPos = gridPos;

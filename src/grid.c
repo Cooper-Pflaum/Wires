@@ -40,13 +40,7 @@ void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
     u32 index = (u32)(currentPos.x + (currentPos.y * GRID_WIDTH));
     if (isPreview) {
       // For preview, just draw the wire without updating the grid
-      DrawRectangle(
-        (currentPos.x * CELL_SIZE) + (world->offset.x * world->zoom),
-        (currentPos.y * CELL_SIZE) + (world->offset.y * world->zoom),
-        CELL_SIZE,
-        CELL_SIZE,
-        wireColor
-      );
+      DrawRectangle((u32)(currentPos.x * CELL_SIZE), (u32)(currentPos.y * CELL_SIZE), CELL_SIZE, CELL_SIZE, wireColor);
     } else {
       // For final wire, update the grid
       world->grid[index].type = 1;
@@ -75,8 +69,8 @@ void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
   u32 lastIndex = (u32)(currentPos.x + (currentPos.y * GRID_WIDTH));
   if (isPreview) {
     DrawRectangle(
-      (currentPos.x * CELL_SIZE) + (world->offset.x * world->zoom),
-      (currentPos.y * CELL_SIZE) + (world->offset.y * world->zoom),
+      (u16)(currentPos.x * CELL_SIZE),
+      (u16)(currentPos.y * CELL_SIZE),
       CELL_SIZE,
       CELL_SIZE,
       wireColor
