@@ -55,19 +55,12 @@ int main(){
 
   while (!WindowShouldClose()) {
     BeginDrawing();
-    ClearBackground(BLACK);
+    ClearBackground(GRAY);
 
     BeginMode2D((Camera2D){.offset = {world.offset.x, world.offset.y}, .target = {0, 0}, .rotation = 0.0f, .zoom = world.zoom});
       HandleInput(&world, &inputs);
       drawGrid(&world);
     EndMode2D();
-
-
-    // Draw all squares in the grid
-
-    //   if (drawing.isDrawing) {
-    //     drawWire(&drawing, true, (Color){state.color.r, state.color.g, state.color.b, 100}); // Pass the state struct pointer and isPreview flag
-    //   }
 
     DrawFPS(0,0);
     char posText[32];

@@ -26,7 +26,6 @@ void drawGrid(struct World *world){
     for (u16 y = startY; y <= endY; y++) {
       if(world->grid[x+(y*GRID_WIDTH)].type != 0){
         DrawRectangle(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, world->grid[x + (y * GRID_WIDTH)].color);
-        // DrawRectangleLines(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, WHITE);
       }
     }
   }
@@ -35,14 +34,19 @@ void drawGrid(struct World *world){
 
 void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
   v2 currentPos = inputs->startPos;
-  Color wireColor = isPreview ? (Color){255, 255, 255, 100} : WHITE; // Semi-transparent white for preview, solid white for final
+  Color wireColor = isPreview ? (Color){255, 0, 0, 100} : RED; // Semi-transparent white for preview, solid white for final
 
   while (currentPos.x != inputs->endPos.x || currentPos.y != inputs->endPos.y) {
     u32 index = (u32)(currentPos.x + (currentPos.y * GRID_WIDTH));
-
     if (isPreview) {
       // For preview, just draw the wire without updating the grid
-      DrawRectangle((currentPos.x + world->offset.x) * world->zoom, (currentPos.y + world->offset.y) * world->zoom, CELL_SIZE, CELL_SIZE, wireColor);
+      DrawRectangle(
+        (currentPos.x + world->offset.x) * world->zoom,
+        (currentPos.y + world->offset.y) * world->zoom,
+        CELL_SIZE,
+        CELL_SIZE,
+        wireColor
+      );
     } else {
       // For final wire, update the grid
       world->grid[index].type = 1;
@@ -70,10 +74,15 @@ void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
   // Draw the last cell
   u32 lastIndex = (u32)(currentPos.x + (currentPos.y * GRID_WIDTH));
   if (isPreview) {
-    DrawRectangle((currentPos.x + world->offset.x) * world->zoom, (currentPos.y + world->offset.y) * world->zoom, CELL_SIZE, CELL_SIZE, wireColor);
+    DrawRectangle(
+      (currentPos.x + world->offset.x) * world->zoom,
+      (currentPos.y + world->offset.y) * world->zoom,
+      CELL_SIZE,
+      CELL_SIZE,
+      wireColor
+    );
   } else {
     world->grid[lastIndex].type = 1;
     world->grid[lastIndex].color = wireColor;
   }
 }
-
