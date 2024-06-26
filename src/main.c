@@ -39,14 +39,6 @@ void init(){
       world.grid[i].pos = (v2) { (u16)(i%GRID_WIDTH) * CELL_SIZE, (u16)(i/GRID_HEIGHT) * CELL_SIZE};
     }
   }
-
-  world.grid[0].color = RED;
-  world.grid[1].color = GREEN;
-  world.grid[2].color = BLUE;
-
-  world.grid[0].type = 1;
-  world.grid[1].type = 1;
-  world.grid[2].type = 1;
 }
 
 
@@ -64,10 +56,6 @@ int main(){
     EndMode2D();
 
     DrawFPS(0,0);
-    char posText[32];
-    sprintf(posText, "Pos: %.1f, %.1f", world.offset.x, world.offset.y);
-    DrawText(posText, 0, 20, 20, GREEN);
-
     EndDrawing();
   }
 
