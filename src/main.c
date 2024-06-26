@@ -14,6 +14,7 @@
 
 
 struct World world = {
+  .menu_active = false,
   .offset = {0.0f, 0.0f},
   .zoom   = 5.0f,
 };
@@ -46,6 +47,7 @@ void init(){
 int main(){
   init();
 
+  
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(BLACK);
@@ -54,6 +56,9 @@ int main(){
       drawGrid(&world);
       HandleInput(&world, &inputs);
     EndMode2D();
+
+
+    GuiCheckBox((Rectangle) { 16, 16, 48, 48 }, "", &world.menu_active);
 
     DrawFPS(0,0);
     EndDrawing();

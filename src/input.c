@@ -29,36 +29,39 @@ void HandleInput(struct World *world, struct Input *inputs) {
   };
 
   // Handle drawing wire
-  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-    if (!inputs->isDrawing) {
-      inputs->startPos = gridPos;
-      inputs->isDrawing = true;
-      inputs->directionSet = false;
-    } 
-    else {
-      // Check if we're back at the start position
-      if (gridPos.x == inputs->startPos.x && gridPos.y == inputs->startPos.y) {
-        inputs->directionSet = false;  // Allow direction to be reset
-      }
-      else if (!inputs->directionSet) {
-        // Set direction based on first non-zero movement
-        if (gridPos.x != inputs->startPos.x || gridPos.y != inputs->startPos.y) {
-          inputs->direction = (fabs(gridPos.x - inputs->startPos.x) > fabs(gridPos.y - inputs->startPos.y));
-          inputs->directionSet = true;
+  if(!world->menu_active){
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+      if (!inputs->isDrawing) {
+        inputs->startPos = gridPos;
+        inputs->isDrawing = true;
+        inputs->directionSet = false;
+      } 
+      else {
+        // Check if we're back at the start position
+        if (gridPos.x == inputs->startPos.x && gridPos.y == inputs->startPos.y) {
+          inputs->directionSet = false;  // Allow direction to be reset
+        }
+        else if (!inputs->directionSet) {
+          // Set direction based on first non-zero movement
+          if (gridPos.x != inputs->startPos.x || gridPos.y != inputs->startPos.y) {
+            inputs->direction = (fabs(gridPos.x - inputs->startPos.x) > fabs(gridPos.y - inputs->startPos.y));
+            inputs->directionSet = true;
+          }
         }
       }
+
+      inputs->endPos = gridPos;
+
+      // Draw the preview wire
+      drawWire(world, inputs, true);
     }
-
-    inputs->endPos = gridPos;
-
-    // Draw the preview wire
-    drawWire(world, inputs, true);
+    else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && inputs->isDrawing) {
+      // Draw the final wire
+      drawWire(world, inputs, false);
+      inputs->isDrawing = false;
+    }
   }
-  else if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && inputs->isDrawing) {
-    // Draw the final wire
-    drawWire(world, inputs, false);
-    inputs->isDrawing = false;
-  }
+
 
   char key = GetKeyPressed();                                    
   switch (key) {

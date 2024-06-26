@@ -23,6 +23,7 @@ typedef struct {
 } Cell;
 
 struct World{
+  bool menu_active;
   f32 zoom;
   v2 offset;
   Cell grid [GRID_WIDTH*GRID_HEIGHT];

@@ -34,14 +34,12 @@ void drawGrid(struct World *world){
 
 void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
   v2 currentPos = inputs->startPos;
-  Color wireColor = isPreview ? (Color){inputs->color.r, inputs->color.g, inputs->color.b, 100} : inputs->color; // Semi-transparent white for preview, solid white for final
+  Color wireColor = isPreview ? (Color){inputs->color.r, inputs->color.g, inputs->color.b, 100} : inputs->color; // Semi-transparent for preview, solid for final
 
   while (currentPos.x != inputs->endPos.x || currentPos.y != inputs->endPos.y) {
     u32 index = (u32)(currentPos.x + (currentPos.y * GRID_WIDTH));
-    if (isPreview) {
-      // For preview, just draw the wire without updating the grid
-      DrawRectangle((u32)(currentPos.x * CELL_SIZE), (u32)(currentPos.y * CELL_SIZE), CELL_SIZE, CELL_SIZE, wireColor);
-    } else {
+    if (isPreview) DrawRectangle((u32)(currentPos.x * CELL_SIZE), (u32)(currentPos.y * CELL_SIZE), CELL_SIZE, CELL_SIZE, wireColor); // For preview, just draw the wire without updating the grid
+    else {
       // For final wire, update the grid
       world->grid[index].type = inputs->type;
       world->grid[index].color = wireColor;
@@ -50,32 +48,20 @@ void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
     // Update the current position
     if (inputs->direction) {
       // Move horizontally first
-      if (currentPos.x != inputs->endPos.x) {
-        currentPos.x += (inputs->endPos.x > currentPos.x) ? 1 : -1;
-      } else {
-        currentPos.y += (inputs->endPos.y > currentPos.y) ? 1 : -1;
-      }
-    } else {
+      if (currentPos.x != inputs->endPos.x) currentPos.x += (inputs->endPos.x > currentPos.x) ? 1 : -1;
+      else /*----------------------------*/ currentPos.y += (inputs->endPos.y > currentPos.y) ? 1 : -1;
+    } 
+    else {
       // Move vertically first
-      if (currentPos.y != inputs->endPos.y) {
-        currentPos.y += (inputs->endPos.y > currentPos.y) ? 1 : -1;
-      } else {
-        currentPos.x += (inputs->endPos.x > currentPos.x) ? 1 : -1;
-      }
+      if (currentPos.y != inputs->endPos.y) currentPos.y += (inputs->endPos.y > currentPos.y) ? 1 : -1;
+      else /*----------------------------*/ currentPos.x += (inputs->endPos.x > currentPos.x) ? 1 : -1;
     }
   }
 
   // Draw the last cell
   u32 lastIndex = (u32)(currentPos.x + (currentPos.y * GRID_WIDTH));
-  if (isPreview) {
-    DrawRectangle(
-      (u16)(currentPos.x * CELL_SIZE),
-      (u16)(currentPos.y * CELL_SIZE),
-      CELL_SIZE,
-      CELL_SIZE,
-      wireColor
-    );
-  } else {
+  if (isPreview) DrawRectangle((u32)(currentPos.x * CELL_SIZE), (u32)(currentPos.y * CELL_SIZE), CELL_SIZE, CELL_SIZE, wireColor);
+  else {
     world->grid[lastIndex].type = inputs->type;
     world->grid[lastIndex].color = wireColor;
   }
