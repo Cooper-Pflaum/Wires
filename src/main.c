@@ -7,10 +7,13 @@
 #include "../lib/types.h"
 #include "../lib/consts.h"
 
-#define RAYGUI_IMPLEMENTATION
 #include "raylib.h"
-#include "../lib/raylibs/raygui.h"
-#include "../lib/raylibs/raymath.h"
+#include "raymath.h"
+
+#define RAYGUI_IMPLEMENTATION
+#define GUI_WIRES_IMPLEMENTATION
+#include "raygui.h"
+#include "gui_wires.h"
 
 
 struct World world = {
@@ -30,10 +33,6 @@ struct Input inputs = {
 
 
 void init(){
-  SetTraceLogLevel(LOG_ERROR);
-  // SetConfigFlags(FLAG_VSYNC_HINT);
-  InitWindow(W, H, "Drawable Grid");
-
   for(int i = 0; i < GRID_WIDTH; i++){
     for(int j = 0; j < GRID_HEIGHT; j++){
       world.grid[i].type = 0;
@@ -45,6 +44,13 @@ void init(){
 
 
 int main(){
+  SetTraceLogLevel(LOG_ERROR);
+  // SetConfigFlags(FLAG_VSYNC_HINT);
+  InitWindow(W, H, "Drawable Grid");
+
+  GuiWiresState GuiState = InitGuiWires();
+
+
   init();
 
   
@@ -52,13 +58,11 @@ int main(){
     BeginDrawing();
     ClearBackground(BLACK);
 
+    GuiWires(&GuiState);
     BeginMode2D((Camera2D){.offset = {world.offset.x, world.offset.y}, .target = {0, 0}, .rotation = 0.0f, .zoom = world.zoom});
       drawGrid(&world);
       HandleInput(&world, &inputs);
     EndMode2D();
-
-
-    GuiCheckBox((Rectangle) { 16, 16, 48, 48 }, "", &world.menu_active);
 
     DrawFPS(0,0);
     EndDrawing();

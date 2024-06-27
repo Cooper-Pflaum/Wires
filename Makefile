@@ -2,7 +2,7 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall -Wextra -Wno-unused-parameter -I./lib/raylibs 
+CFLAGS = -Wall -Wextra -Wno-unused-parameter -I./lib/raylibs -I./lib -I$(INCDIR) -I$(SRCDIR)
 
 # Linker flags
 LDFLAGS = -lraylib -lm -lGL -lX11 -lpthread -ldl -lrt
@@ -35,7 +35,7 @@ $(TARGET): $(OBJS)
 # Rule to compile source files into object files
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c
 	@mkdir -p $(BUILDDIR)
-	$(CC) $(CFLAGS) -I$(INCDIR) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 # Clean rule to remove object files and the executable
 clean:

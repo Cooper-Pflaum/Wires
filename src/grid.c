@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "grid.h"
 #include "input.h"
+
 #include "../lib/types.h"
 #include "../lib/consts.h"
 
