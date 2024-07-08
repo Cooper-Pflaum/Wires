@@ -9,7 +9,7 @@ CIMGUI_PATH = lib/cimgui
 RAYLIB_CIMGUI_PATH = lib/raylib-cimgui
 
 # Compiler flags
-CFLAGS = -Wall -Wextra -Wno-unused-parameter -I./lib/raylibs -I./lib -I$(INCDIR) -I$(SRCDIR) -I$(CIMGUI_PATH) -I$(RAYLIB_CIMGUI_PATH)
+CFLAGS = -Wall -Wextra -I$(INCDIR) -I$(SRCDIR) -I$(CIMGUI_PATH) -I$(RAYLIB_CIMGUI_PATH)
 
 # Linker flags
 LDFLAGS = -L./lib/raylibs -L$(CIMGUI_PATH) -Wl,-rpath,$(CIMGUI_PATH) -lraylib -lm -lGL -lX11 -lpthread -ldl -lrt

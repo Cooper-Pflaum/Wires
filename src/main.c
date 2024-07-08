@@ -57,11 +57,29 @@ void initImGui() {
   ImGui_ImplRaylib_BuildFontAtlas();
 }
 
-void drawGUI(struct GUI *gui) {
+void drawGUI(struct GUI *gui, struct Input *inputs) {
   igBegin("MENU", NULL, 0);
   igText("This is some useful text.");
   igCheckbox("Demo Window", &gui->showDemoWindow);
-  igColorEdit3("Wire Color", (float*)&gui->clearColor, 0);
+
+  // Convert Color to float array
+  float color[4] = {
+    inputs->color.r / 255.0f,
+    inputs->color.g / 255.0f,
+    inputs->color.b / 255.0f,
+    inputs->color.a / 255.0f
+  };
+  
+  if (igColorEdit4("Wire Color", color, ImGuiColorEditFlags_NoAlpha)) {
+    // Convert back to Color if changed
+    inputs->color = (Color){
+      (unsigned char)(color[0] * 255),
+      (unsigned char)(color[1] * 255),
+      (unsigned char)(color[2] * 255),
+      255
+    };
+  }
+
   igText("%.1f FPS (%.3f ms/frame)", igGetIO()->Framerate, 1000.0f / igGetIO()->Framerate);
   igEnd();
   if(gui->showDemoWindow) igShowDemoWindow(&gui->showDemoWindow);
@@ -105,7 +123,7 @@ int main() {
         
         EndMode2D();
 
-        drawGUI(&gui);
+        drawGUI(&gui, &inputs);
 
         igRender();
         ImGui_ImplRaylib_RenderDrawData(igGetDrawData());
