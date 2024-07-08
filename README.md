@@ -4,7 +4,7 @@ Welcome to Wires. The logisim clone that I always wanted but never got
 
 ### Project highlights:
 
-- Simple ui powered by CImGUI
+- Simple UI powered by CImGUI
 
 
 ## TODO:
