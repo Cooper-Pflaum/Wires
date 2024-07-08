@@ -2,8 +2,8 @@
 #define GRID_H
 
 #include "raylib.h"
-#include "../lib/types.h"
-#include "../lib/consts.h"
+#include "../include/types.h"
+#include "../include/consts.h"
 
 // extern int grid[GRID_HEIGHT][GRID_WIDTH]; // Declare the grid array
 

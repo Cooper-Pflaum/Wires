@@ -2,8 +2,8 @@
 #define INPUT_H
 
 #include "raylib.h"
-#include "../lib/types.h"
-#include "../lib/consts.h"
+#include "../include/types.h"
+#include "../include/consts.h"
 
 
 // void HandleDrawingInput(DrawingState *state, v2 mousePos);

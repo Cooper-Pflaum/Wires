@@ -1,5 +1,5 @@
 #include <math.h>
-#include "../lib/types.h"
+#include "../include/types.h"
 
 f32 _clamp(f32 value, f32 min, f32 max) {
   return fmaxf(min, fminf(value, max));       // Force value to stay in range

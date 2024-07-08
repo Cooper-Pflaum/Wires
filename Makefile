@@ -1,26 +1,25 @@
 # Compiler
 CC = gcc
 
+# Directories
+SRCDIR = src
+BUILDDIR = build
+INCDIR = include
+CIMGUI_PATH = include/cimgui
+RAYLIB_CIMGUI_PATH = include/raylib-cimgui
+
 # Compiler flags
-CFLAGS = -Wall -Wextra -Wno-unused-parameter -I./lib/raylibs -I./lib -I$(INCDIR) -I$(SRCDIR)
+CFLAGS = -Wall -Wextra -Wno-unused-parameter -I./lib/raylibs -I./lib -I$(INCDIR) -I$(SRCDIR) -I$(CIMGUI_PATH) -I$(RAYLIB_CIMGUI_PATH)
 
 # Linker flags
-LDFLAGS = -lraylib -lm -lGL -lX11 -lpthread -ldl -lrt
-
-# Source directory
-SRCDIR = src
-
-# Build directory
-BUILDDIR = build
-
-# Include directory
-INCDIR = inc
+LDFLAGS = -L./lib/raylibs -L$(CIMGUI_PATH) -Wl,-rpath,$(CIMGUI_PATH) -lraylib -lm -lGL -lX11 -lpthread -ldl -lrt
+LDLIBS = -L$(CIMGUI_PATH) -lcimgui -lstdc++
 
 # Source files
-SRCS = $(wildcard $(SRCDIR)/*.c)
+SRCS = $(wildcard $(SRCDIR)/*.c) $(RAYLIB_CIMGUI_PATH)/rlcimgui.c
 
 # Object files
-OBJS = $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRCS))
+OBJS = $(patsubst %.c,$(BUILDDIR)/%.o,$(notdir $(SRCS)))
 
 # Executable name
 TARGET = main
@@ -30,10 +29,14 @@ all: $(TARGET)
 
 # Rule to link the executable
 $(TARGET): $(OBJS)
-	$(CC) $^ -o $@ $(LDFLAGS)
+	$(CC) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 
 # Rule to compile source files into object files
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(BUILDDIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILDDIR)/%.o: $(RAYLIB_CIMGUI_PATH)/%.c
 	@mkdir -p $(BUILDDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
