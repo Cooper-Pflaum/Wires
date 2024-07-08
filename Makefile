@@ -5,8 +5,8 @@ CC = gcc
 SRCDIR = src
 BUILDDIR = build
 INCDIR = include
-CIMGUI_PATH = include/cimgui
-RAYLIB_CIMGUI_PATH = include/raylib-cimgui
+CIMGUI_PATH = lib/cimgui
+RAYLIB_CIMGUI_PATH = lib/raylib-cimgui
 
 # Compiler flags
 CFLAGS = -Wall -Wextra -Wno-unused-parameter -I./lib/raylibs -I./lib -I$(INCDIR) -I$(SRCDIR) -I$(CIMGUI_PATH) -I$(RAYLIB_CIMGUI_PATH)

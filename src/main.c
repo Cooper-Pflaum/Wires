@@ -9,8 +9,8 @@
 #include "raylib.h"
 #include "raymath.h"
 
-#include "../include/raylib-cimgui/rlcimgui.h"
-#include "../include/raylib-cimgui/imgui_impl_raylib.h"
+#include "../lib/raylib-cimgui/rlcimgui.h"
+#include "../lib/raylib-cimgui/imgui_impl_raylib.h"
 
 struct World world = {
   .menu_active = false,
@@ -44,8 +44,8 @@ void initGrid() {
 void initImGui() {
   igCreateContext(NULL);
   ImGuiIO *io = igGetIO();
+
   io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
-  
   #ifdef IMGUI_HAS_DOCK
     io->ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
   #endif
@@ -64,10 +64,7 @@ void drawGUI(struct GUI *gui) {
   igColorEdit3("Wire Color", (float*)&gui->clearColor, 0);
   igText("%.1f FPS (%.3f ms/frame)", igGetIO()->Framerate, 1000.0f / igGetIO()->Framerate);
   igEnd();
-
-  if (gui->showDemoWindow) {
-    igShowDemoWindow(&gui->showDemoWindow);
-  }
+  if(gui->showDemoWindow) igShowDemoWindow(&gui->showDemoWindow);
 }
 
 int main() {
