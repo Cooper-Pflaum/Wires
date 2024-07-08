@@ -89,6 +89,7 @@ int main() {
       ImGui_ImplRaylib_NewFrame();
       igNewFrame();
 
+      // Raylib drawing begin
       BeginDrawing();
         ClearBackground((Color){0.0f, 0.0f, 0.0f, 1.0f});
         BeginMode2D((Camera2D){
