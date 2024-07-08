@@ -1,6 +1,6 @@
-[submodule "include/cimgui"]
-	path = include/cimgui
+[submodule "lib/cimgui"]
+	path = lib/cimgui
 	url = https://github.com/cimgui/cimgui.git
-[submodule "include/raylib-cimgui"]
-	path = include/raylib-cimgui
+[submodule "lib/raylib-cimgui"]
+	path = lib/raylib-cimgui
 	url = git@github.com:alfredbaudisch/raylib-cimgui.git
