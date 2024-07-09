@@ -38,12 +38,11 @@ void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
   Color wireColor = isPreview ? (Color){inputs->color.r, inputs->color.g, inputs->color.b, 100} : inputs->color; // Semi-transparent for preview, solid for final
 
   while (currentPos.x != inputs->endPos.x || currentPos.y != inputs->endPos.y) {
-    u32 index = (u32)(currentPos.x + (currentPos.y * GRID_WIDTH));
     if (isPreview) DrawRectangle((u32)(currentPos.x * CELL_SIZE), (u32)(currentPos.y * CELL_SIZE), CELL_SIZE, CELL_SIZE, wireColor); // For preview, just draw the wire without updating the grid
     else {
       // For final wire, update the grid
-      world->grid[index].type = inputs->type;
-      world->grid[index].color = wireColor;
+      world->grid[(u32)(currentPos.x + (currentPos.y * GRID_WIDTH))].type = inputs->type;
+      world->grid[(u32)(currentPos.x + (currentPos.y * GRID_WIDTH))].color = wireColor;
     }
 
     // Update the current position
@@ -60,10 +59,9 @@ void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
   }
 
   // Draw the last cell
-  u32 lastIndex = (u32)(currentPos.x + (currentPos.y * GRID_WIDTH));
   if (isPreview) DrawRectangle((u32)(currentPos.x * CELL_SIZE), (u32)(currentPos.y * CELL_SIZE), CELL_SIZE, CELL_SIZE, wireColor);
   else {
-    world->grid[lastIndex].type = inputs->type;
-    world->grid[lastIndex].color = wireColor;
+    world->grid[(u32)(currentPos.x + (currentPos.y * GRID_WIDTH))].type = inputs->type;
+    world->grid[(u32)(currentPos.x + (currentPos.y * GRID_WIDTH))].color = wireColor;
   }
 }

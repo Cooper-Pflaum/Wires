@@ -58,9 +58,27 @@ void initImGui() {
 }
 
 void drawGUI(struct GUI *gui, struct Input *inputs) {
+
+
   igBegin("MENU", NULL, 0);
-  igText("This is some useful text.");
-  igCheckbox("Demo Window", &gui->showDemoWindow);
+  igSeparatorText("Wire Select");
+  // igInputInt("Data Bits", &bits, 1, 100, 0);
+  
+  // Declare this at file scope or as a static variable in your rendering function
+static int selected_bits = 8; // Default value
+
+if (igButton("Data bits", (ImVec2){0,0})) {
+    igOpenPopup_Str("bits_popup", 0);
+}
+igSameLine(0, -1);
+igText("%d bits", selected_bits);
+
+if (igBeginPopup("bits_popup", 0)) {
+    for (int bits = 1; bits <= 64; bits *= 2)
+        if (igSelectable_Bool(TextFormat("%d bits", bits), selected_bits == bits, 0, (ImVec2){0,0}))
+            selected_bits = bits;
+    igEndPopup();
+}
 
   // Convert Color to float array
   float color[4] = {
@@ -81,13 +99,14 @@ void drawGUI(struct GUI *gui, struct Input *inputs) {
   }
 
   igText("%.1f FPS (%.3f ms/frame)", igGetIO()->Framerate, 1000.0f / igGetIO()->Framerate);
+  // igCheckbox("Demo Window", &gui->showDemoWindow);
+  // if(gui->showDemoWindow) igShowDemoWindow(&gui->showDemoWindow);
   igEnd();
-  if(gui->showDemoWindow) igShowDemoWindow(&gui->showDemoWindow);
 }
 
 int main() {
     SetTraceLogLevel(LOG_ERROR);
-    SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI);
+    SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
     InitWindow(W, H, "Drawable Grid");
 
     initGrid();
@@ -116,8 +135,7 @@ int main() {
         
         drawGrid(&world);
   
-        bool isMouseOverImGuiWindow = igIsAnyItemHovered() || igIsWindowHovered(ImGuiHoveredFlags_AnyWindow);
-        if(!isMouseOverImGuiWindow){
+        if(!(igIsAnyItemHovered() || igIsWindowHovered(ImGuiHoveredFlags_AnyWindow))){
           HandleInput(&world, &inputs);
         }
         
