@@ -59,45 +59,4 @@ void HandleInput(struct World *world, struct Input *inputs) {
     drawWire(world, inputs, false);
     inputs->isDrawing = false;
   }
-
-
-  char key = GetKeyPressed();                                    
-  switch (key) {
-    case '1':
-      inputs->type = 1;
-      inputs->color = MAROON;
-      break;
-    case '2':
-      inputs->type = 1;
-      inputs->color = ORANGE;
-      break;
-    case '3':
-      inputs->type = 1;
-      inputs->color = YELLOW;
-      break;
-    case '4':
-      inputs->type = 1;
-      inputs->color = LIME;
-      break;
-    case '5':
-      inputs->type = 1;
-      inputs->color = BLUE;
-      break;
-    case '6':
-      inputs->type = 1;
-      inputs->color = VIOLET;
-      break;
-    case '7':
-      inputs->type = 1;
-      inputs->color = RAYWHITE;
-      break;
-    case '0':
-      printf("BLACK");
-      inputs->type = 0;
-      inputs->color = BLANK;
-      break;
-    default:
-      // Handle unexpected case if needed
-      break;
-  }
 }
