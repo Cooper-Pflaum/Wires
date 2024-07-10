@@ -32,8 +32,7 @@ void drawGrid(struct World *world){
   }
 }
 
-
-static void drawSegment(v2 from, v2 to, f32 cellSize, Color color) {
+void drawSegment(v2 from, v2 to, f32 cellSize, Color color) {
     DrawRectangle(
         fminf(from.x, to.x),
         fminf(from.y, to.y),
@@ -43,7 +42,7 @@ static void drawSegment(v2 from, v2 to, f32 cellSize, Color color) {
     );
 }
 
-static void updateGridCell(struct World *world, int x, int y, int type, Color color) {
+void updateGridCell(struct World *world, int x, int y, int type, Color color) {
     u32 index = x + (y * GRID_WIDTH);
     world->grid[index].type = type;
     world->grid[index].color = color;
