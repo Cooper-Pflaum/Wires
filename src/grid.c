@@ -5,8 +5,8 @@
 #include "grid.h"
 #include "input.h"
 
-#include "../include/types.h"
-#include "../include/consts.h"
+#include "types.h"
+#include "consts.h"
 
 
 

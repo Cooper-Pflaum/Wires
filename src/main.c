@@ -3,14 +3,16 @@
 
 #include "grid.h"
 #include "input.h"
-#include "../include/types.h"
-#include "../include/consts.h"
+#include "types.h"
+#include "consts.h"
 
 #include "raylib.h"
-#include "raymath.h"
+#include "../lib/raylib/raymath.h"
+
 
 #include "../lib/raylib-cimgui/rlcimgui.h"
 #include "../lib/raylib-cimgui/imgui_impl_raylib.h"
+
 
 struct World world = {
   .menu_active = false,
@@ -98,7 +100,17 @@ if (igBeginPopup("bits_popup", 0)) {
     };
   }
 
-  igText("%.1f FPS (%.3f ms/frame)", igGetIO()->Framerate, 1000.0f / igGetIO()->Framerate);
+ImVec2 window_size;
+igGetWindowSize(&window_size);
+
+ImVec2 text_size;
+igCalcTextSize(&text_size, "000.0 FPS (00.0 ms)", NULL, false, -1.0f);
+
+igSetCursorPos((ImVec2){
+    window_size.x - text_size.x - 10.0f,
+    20.0f
+});
+igText("%.1f FPS (%.1f ms)", igGetIO()->Framerate, 1000.0f / igGetIO()->Framerate);
   // igCheckbox("Demo Window", &gui->showDemoWindow);
   // if(gui->showDemoWindow) igShowDemoWindow(&gui->showDemoWindow);
   igEnd();

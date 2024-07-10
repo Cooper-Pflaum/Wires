@@ -1,9 +1,11 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include "raylib.h"
-#include "types.h"
-#include "consts.h"
+
+#include "../include/types.h"
+#include "../include/consts.h"
+#include "../lib/raylib-cimgui/rlcimgui.h"
+#include "../lib/raylib-cimgui/imgui_impl_raylib.h"
 
 // extern int grid[GRID_HEIGHT][GRID_WIDTH]; // Declare the grid array
 

@@ -2,8 +2,8 @@
 #define INPUT_H
 
 #include "raylib.h"
-#include "../include/types.h"
-#include "../include/consts.h"
+#include "types.h"
+#include "consts.h"
 
 void HandleInput(struct World *world, struct Input *inputs);
 
