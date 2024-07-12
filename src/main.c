@@ -10,10 +10,19 @@
 #include "types.h"
 #include "consts.h"
 
-struct World world = {
+World world = {
   .menu_active = false,
   .offset = {0.0f, 0.0f},
   .zoom   = 5.0f,
+
+
+    // Initialize GUI struct
+  .gui = (GUI){
+      .show_debug = false,
+      .selected_bits = 1,
+      .wire_color = RED,  // Default color
+      .show_bits_popup = false
+  },
 };
 
 struct Input inputs = {
@@ -45,6 +54,9 @@ void update(){
 
   if(!(igIsAnyItemHovered() || igIsWindowHovered(ImGuiHoveredFlags_AnyWindow))){
     HandleInput(&world, &inputs);
+  }
+  else {
+    inputs.isDrawing = false;
   }
 }
 

@@ -10,7 +10,7 @@
 
 
 
-void drawGrid(struct World *world){
+void drawGrid(World *world){
   // Precompute values to reduce redundant calculations
   f32 invZoom = 1.0f / world->zoom;
   f32 offsetX = -world->offset.x * invZoom;
@@ -42,13 +42,13 @@ void drawSegment(v2 from, v2 to, f32 cellSize, Color color) {
     );
 }
 
-void updateGridCell(struct World *world, int x, int y, int type, Color color) {
+void updateGridCell(World *world, int x, int y, int type, Color color) {
     u32 index = x + (y * GRID_WIDTH);
     world->grid[index].type = type;
     world->grid[index].color = color;
 }
 
-void drawWire(struct World *world, struct Input *inputs, bool isPreview) {
+void drawWire(World *world, struct Input *inputs, bool isPreview) {
     Color wireColor = isPreview ? (Color){inputs->color.r, inputs->color.g, inputs->color.b, 100} : inputs->color;
     f32 cellSize = CELL_SIZE * world->zoom;
     

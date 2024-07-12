@@ -5,6 +5,6 @@
 #include "types.h"
 #include "consts.h"
 
-void HandleInput(struct World *world, struct Input *inputs);
+void HandleInput(World *world, struct Input *inputs);
 
 #endif // INPUT_H

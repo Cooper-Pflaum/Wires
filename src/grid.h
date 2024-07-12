@@ -7,6 +7,6 @@
 
 // extern int grid[GRID_HEIGHT][GRID_WIDTH]; // Declare the grid array
 
-void drawWire(struct World *world, struct Input *inputs, bool isPreview);
-void drawGrid(struct World *world);
+void drawWire(World *world, struct Input *inputs, bool isPreview);
+void drawGrid(World *world);
 #endif // GRID_H

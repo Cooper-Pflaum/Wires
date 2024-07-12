@@ -11,7 +11,7 @@
 
 
 
-void HandleInput(struct World *world, struct Input *inputs) {
+void HandleInput(World *world, struct Input *inputs) {
   // Handle zoom
   world->zoom = _clamp(world->zoom + GetMouseWheelMove() * 0.5f, 0.5f, 10.0f);
 
@@ -23,13 +23,14 @@ void HandleInput(struct World *world, struct Input *inputs) {
   }
 
   v2 mousePos = GetMousePosition();
-  v2 gridPos = {
-    (u16)((mousePos.x - world->offset.x) / CELL_SIZE / world->zoom),
-    (u16)((mousePos.y - world->offset.y) / CELL_SIZE / world->zoom) 
-  };
+
 
   // Handle drawing wire
   if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+    v2 gridPos = {
+      (u16)((mousePos.x - world->offset.x) / CELL_SIZE / world->zoom),
+      (u16)((mousePos.y - world->offset.y) / CELL_SIZE / world->zoom) 
+    };
     if (!inputs->isDrawing) {
       inputs->startPos = gridPos;
       inputs->isDrawing = true;
