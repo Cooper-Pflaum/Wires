@@ -19,8 +19,8 @@ void drawGrid(World *world){
   // Calculate the visible area based on the zoom level and offset
   u16 startX = (u16)fmaxf((f32)(offsetX / CELL_SIZE), 0.0f);
   u16 startY = (u16)fmaxf((f32)(offsetY / CELL_SIZE), 0.0f);
-  u16 endX   = (u16)fminf((f32)((offsetX + W * invZoom) / CELL_SIZE), (f32)(GRID_WIDTH - 1));
-  u16 endY   = (u16)fminf((f32)((offsetY + H * invZoom) / CELL_SIZE), (f32)(GRID_HEIGHT - 1));
+  u16 endX   = (u16)fminf((f32)((offsetX + world->screenSize.x * invZoom) / CELL_SIZE), (f32)(GRID_WIDTH - 1));
+  u16 endY   = (u16)fminf((f32)((offsetY + world->screenSize.y * invZoom) / CELL_SIZE), (f32)(GRID_HEIGHT - 1));
 
   // Draw only the visible cells
   for (u16 x = startX; x <= endX; x++) {

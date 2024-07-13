@@ -87,6 +87,7 @@ typedef struct {
 } GUI;
 
 typedef struct {
+    v2 screenSize;
     bool menu_active;
     f32 zoom;
     v2 offset;

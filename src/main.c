@@ -16,6 +16,8 @@ World world = {
   .zoom   = 5.0f,
 
 
+  .screenSize = {W, H},
+
     // Initialize GUI struct
   .gui = (GUI){
       .show_debug = false,
@@ -58,6 +60,7 @@ void update(){
   else {
     inputs.isDrawing = false;
   }
+  if (IsWindowResized()) world.screenSize = (v2) {GetScreenWidth(), GetScreenHeight()};
 }
 
 void render(){
