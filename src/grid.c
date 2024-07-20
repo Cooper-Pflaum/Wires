@@ -33,13 +33,13 @@ void drawGrid(World *world){
 }
 
 void drawSegment(v2 from, v2 to, f32 cellSize, Color color) {
-    DrawRectangle(
-        fminf(from.x, to.x),
-        fminf(from.y, to.y),
-        fabsf(to.x - from.x) + cellSize,
-        fabsf(to.y - from.y) + cellSize,
-        color
-    );
+  DrawRectangle(
+    fminf(from.x, to.x),
+    fminf(from.y, to.y),
+    fabsf(to.x - from.x) + cellSize,
+    fabsf(to.y - from.y) + cellSize,
+    color
+  );
 }
 
 void updateGridCell(World *world, int x, int y, int type, Color color) {
@@ -49,7 +49,7 @@ void updateGridCell(World *world, int x, int y, int type, Color color) {
 }
 
 void drawWire(World *world, struct Input *inputs, bool isPreview) {
-    Color wireColor = isPreview ? (Color){inputs->color.r, inputs->color.g, inputs->color.b, 100} : inputs->color;
+    Color wireColor = isPreview ? (Color){inputs->wire_color.r, inputs->wire_color.g, inputs->wire_color.b, 100} : inputs->wire_color;
     f32 cellSize = CELL_SIZE * world->zoom;
     
     // Calculate screen positions
@@ -58,9 +58,9 @@ void drawWire(World *world, struct Input *inputs, bool isPreview) {
     v2 cornerScreen = inputs->direction ? (v2){endScreen.x, startScreen.y} : (v2){startScreen.x, endScreen.y};
 
     if (isPreview) {
-        // Draw preview using screen coordinates
-        drawSegment(startScreen, cornerScreen, cellSize, wireColor);
-        drawSegment(cornerScreen, endScreen, cellSize, wireColor);
+      // Draw preview using screen coordinates
+      drawSegment(startScreen, cornerScreen, cellSize, wireColor);
+      drawSegment(cornerScreen, endScreen, cellSize, wireColor);
     } else {
       // Use grid coordinates for actual wire placement
       u32 dx = (inputs->endPos.x > inputs->startPos.x) - (inputs->endPos.x < inputs->startPos.x);

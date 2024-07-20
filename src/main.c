@@ -14,11 +14,7 @@ World world = {
   .menu_active = false,
   .offset = {0.0f, 0.0f},
   .zoom   = 5.0f,
-
-
   .screenSize = {W, H},
-
-    // Initialize GUI struct
   .gui = (GUI){
       .show_debug = false,
       .selected_bits = 1,
@@ -28,7 +24,7 @@ World world = {
 };
 
 struct Input inputs = {
-  .color = RED,
+  .wire_color = RED,
   .type = 1,
   .isDrawing = false,
   .direction = false,

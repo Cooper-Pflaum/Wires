@@ -1,30 +1,25 @@
-
+#include "raylib.h"
 #include "../lib/raylib-cimgui/rlcimgui.h"
 #include "../lib/raylib-cimgui/imgui_impl_raylib.h"
 #include "types.h"
 #include "consts.h"
-
-
+#include "utils.h"
 
 void initImGUI(){
-    igCreateContext(NULL);
-    ImGuiIO *io = igGetIO();
+  igCreateContext(NULL);
+  ImGuiIO *io = igGetIO();
 
-    io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
-    #ifdef IMGUI_HAS_DOCK
-        io->ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
-    #endif
-    
-    igStyleColorsDark(NULL);
-    ImGui_ImplRaylib_Init();
-    ImFontAtlas_AddFontDefault(io->Fonts, NULL);
-    rligSetupFontAwesome();
-    ImGui_ImplRaylib_BuildFontAtlas();
-
-
+  io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_NavEnableGamepad;
+  #ifdef IMGUI_HAS_DOCK
+      io->ConfigFlags |= ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
+  #endif
+  
+  igStyleColorsDark(NULL);
+  ImGui_ImplRaylib_Init();
+  ImFontAtlas_AddFontDefault(io->Fonts, NULL);
+  rligSetupFontAwesome();
+  ImGui_ImplRaylib_BuildFontAtlas();
 }
-
-
 
 void debug(World *world, struct Input *inputs, bool *open) {
   if (!*open) return;
@@ -44,14 +39,17 @@ void debug(World *world, struct Input *inputs, bool *open) {
   igText("World Offset: (%.2f, %.2f)", world->offset.x, world->offset.y);
 
   igSeparatorText("Input Info");
+
   v2 mousePos = GetMousePosition();
-  u32 gridX = (int)((mousePos.x - world->offset.x) / (CELL_SIZE * world->zoom));
-  u32 gridY = (int)((mousePos.y - world->offset.y) / (CELL_SIZE * world->zoom));
-  igText("Mouse Grid Pos: (%d, %d)", gridX, gridY);
+  igText("Mouse Grid Pos: (%d, %d)", 
+         (u32)((mousePos.x - world->offset.x) / (CELL_SIZE * world->zoom)), 
+         (u32)((mousePos.y - world->offset.y) / (CELL_SIZE * world->zoom))
+  );
+
   // igText("Start Pos: (%d, %d)", inputs->startPos.x, inputs->startPos.y);
   // igText("End Pos: (%d, %d)", inputs->endPos.x, inputs->endPos.y);
   igText("Wire Type: %d", inputs->type);
-  igText("Wire Color: (%d, %d, %d)", inputs->color.r, inputs->color.g, inputs->color.b);
+  igText("Wire Color: (%d, %d, %d)", inputs->wire_color.r, inputs->wire_color.g, inputs->wire_color.b);
   igText("Wire Direction: %s", inputs->direction ? "Horizontal First" : "Vertical First");
 
   igSeparatorText("Game State");
@@ -61,43 +59,50 @@ void debug(World *world, struct Input *inputs, bool *open) {
   igEnd();
 }
 
-
 void drawGUI(World *world, struct Input *inputs) {
   GUI *gui = &world->gui;
 
   igBegin("MENU", NULL, 0);
   igSeparatorText("Wire Select");
 
-  if (igButton("Data bits", (ImVec2){0,0})) {
-    gui->show_bits_popup = true;
+  // Color dropdown menu
+  const char* color_items[] = { "Red", "Green", "Blue", "Yellow", "Cyan", "Magenta", "White" };
+  const Color color_values[] = {
+    RED, GREEN, BLUE, YELLOW, SKYBLUE, MAGENTA, WHITE 
+  };
+  static int color_item_current = 0;
+
+  if (igBeginCombo("Wire Color", color_items[color_item_current], 0)) {
+    for (u8 n = 0; n < (u8)(sizeof(color_items) / sizeof(color_items[0])); n++) {
+      bool is_selected = (color_item_current == n);
+      
+      // Display color box
+      ImVec4 imcolor = ColorToImVec4(color_values[n]);
+      igColorButton("##color", imcolor, ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, (ImVec2){20, 20});
+      igSameLine(0, 5);
+
+      if (igSelectable_Bool(color_items[n], is_selected, 0, (ImVec2){0,0})) {
+        color_item_current = n;
+        inputs->wire_color = color_values[n];
+      }
+      if (is_selected) {
+        igSetItemDefaultFocus();
+      }
+    }
+    igEndCombo();
   }
 
-  if (gui->show_bits_popup) {
-    igOpenPopup_Str("bits_popup", 0);
-    gui->show_bits_popup = false;
-  }
-
-  if (igBeginPopup("bits_popup", 0)) {
-    for (int bits = 1; bits <= 64; bits *= 2)
-      if (igSelectable_Bool(TextFormat("%d bits", bits), gui->selected_bits == bits, 0, (ImVec2){0,0}))
-        gui->selected_bits = bits;
-    igEndPopup();
-  }
-  igSameLine(0, -1);
-  igText("%d bits", gui->selected_bits);
-
-  f32 color[4] = {gui->wire_color.r / 255.0f, gui->wire_color.g / 255.0f, gui->wire_color.b / 255.0f, 1.0f};
-  if (igColorEdit4("Wire Color", color, ImGuiColorEditFlags_NoAlpha)) {
-    gui->wire_color = (Color){(u8)(color[0] * 255), (u8)(color[1] * 255), (u8)(color[2] * 255), 255};
-  }
+  // Display current color box outside the dropdown
+  ImVec4 current_imcolor = ColorToImVec4(inputs->wire_color);
+  igColorButton("##current_color", current_imcolor, ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, (ImVec2){20, 20});
+  igSameLine(0, 5);
+  igText("Current Color");
 
   igCheckbox("Debug", &gui->show_debug);
-
   igEnd();
 
   // Call debug function outside of the main menu window
   debug(world, inputs, &gui->show_debug);
-
   igRender();
   ImGui_ImplRaylib_RenderDrawData(igGetDrawData());
 }

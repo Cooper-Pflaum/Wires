@@ -1,10 +1,12 @@
 #ifndef TYPES_H
 #define TYPES_H
+#define MAX_CUSTOM_COLORS 16
 
 #include <stdint.h>
 #include <unistd.h>
 #include "consts.h"
 #include "raylib.h"
+#include "../lib/raylib-cimgui/imgui_impl_raylib.h"
 
 typedef float    f32;
 typedef double   f64;
@@ -80,10 +82,19 @@ typedef enum {
 
 
 typedef struct {
+    char name[32];
+    Color color;
+} CustomColor;
+
+
+typedef struct {
     bool show_debug;
     u8 selected_bits;
     Color wire_color;
+    Color custom_color;
     bool show_bits_popup;
+    CustomColor saved_colors[MAX_CUSTOM_COLORS];
+    int num_saved_colors;
 } GUI;
 
 typedef struct {
@@ -102,7 +113,7 @@ typedef struct {
 
 struct Input{
   u8 type;
-  Color color;
+  Color wire_color;
   v2 startPos;
   v2 endPos;
   bool isDrawing;
