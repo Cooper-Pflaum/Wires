@@ -1,10 +1,7 @@
 #include <stdio.h>
-#include <math.h>
-
 #include "raylib.h"
-#include "../lib/raylib/raymath.h"
-#include "gui.h"
 
+#include "gui.h"
 #include "grid.h"
 #include "input.h"
 #include "types.h"
@@ -12,16 +9,18 @@
 
 World world = {
   .menu_active = false,
-  .offset = {0.0f, 0.0f},
+  .offset = { 0.0f, 0.0f },
   .zoom   = 5.0f,
-  .screenSize = {W, H},
+  .screenSize = { .x=W, H },
   .gui = (GUI){
-      .show_debug = false,
-      .selected_bits = 1,
-      .wire_color = RED,  // Default color
-      .show_bits_popup = false
+    .show_debug = false,
+    .show_debug_lines = false,
+		.selected_bits = 1,
+		.wire_color = RED,  // Default color
+		.show_bits_popup = false
   },
 };
+
 
 struct Input inputs = {
   .wire_color = RED,

@@ -4,7 +4,7 @@ CC = gcc
 # Directories
 SRCDIR = src
 BUILDDIR = build
-INCDIR = include
+INCDIR = inc
 CIMGUI_PATH = lib/cimgui
 RAYLIB_CIMGUI_PATH = lib/raylib-cimgui
 

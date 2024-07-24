@@ -38,6 +38,7 @@ void debug(World *world, struct Input *inputs, bool *open) {
   igText("Grid Size: %dx%d", GRID_WIDTH, GRID_HEIGHT);
   igText("World Offset: (%.2f, %.2f)", world->offset.x, world->offset.y);
 
+
   igSeparatorText("Input Info");
 
   v2 mousePos = GetMousePosition();
@@ -77,7 +78,7 @@ void drawGUI(World *world, struct Input *inputs) {
       bool is_selected = (color_item_current == n);
       
       // Display color box
-      ImVec4 imcolor = ColorToImVec4(color_values[n]);
+      ImVec4 imcolor = _ColorToImVec4(color_values[n]);
       igColorButton("##color", imcolor, ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, (ImVec2){20, 20});
       igSameLine(0, 5);
 
@@ -93,12 +94,13 @@ void drawGUI(World *world, struct Input *inputs) {
   }
 
   // Display current color box outside the dropdown
-  ImVec4 current_imcolor = ColorToImVec4(inputs->wire_color);
+  ImVec4 current_imcolor = _ColorToImVec4(inputs->wire_color);
   igColorButton("##current_color", current_imcolor, ImGuiColorEditFlags_NoTooltip | ImGuiColorEditFlags_NoDragDrop, (ImVec2){20, 20});
   igSameLine(0, 5);
   igText("Current Color");
 
   igCheckbox("Debug", &gui->show_debug);
+  igCheckbox("Debug Lines", &world->gui.show_debug_lines);
   igEnd();
 
   // Call debug function outside of the main menu window

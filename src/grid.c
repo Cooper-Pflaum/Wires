@@ -25,19 +25,50 @@ void drawGrid(World *world){
   // Draw only the visible cells
   for (u16 x = startX; x <= endX; x++) {
     for (u16 y = startY; y <= endY; y++) {
-      if(world->grid[x+(y*GRID_WIDTH)].type != 0){
-        DrawRectangle(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, world->grid[x + (y * GRID_WIDTH)].color);
+      if (world->gui.show_debug_lines) DrawRectangleLines(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE, LIGHTGRAY);
+
+      if(world->grid[x+(y*GRID_WIDTH)].type != 0) {
+        Color currentColor = world->grid[x + (y * GRID_WIDTH)].color;
+        
+        // Calculate neighboring colors
+        Color leftColor = (x > 0)                 ? world->grid[(x-1) + (y * GRID_WIDTH)].color : BLANK;
+        Color rightColor = (x < GRID_WIDTH - 1)   ? world->grid[(x+1) + (y * GRID_WIDTH)].color : BLANK;
+        Color topColor = (y > 0)                  ? world->grid[x + ((y-1) * GRID_WIDTH)].color : BLANK;
+        Color bottomColor = (y < GRID_HEIGHT - 1) ? world->grid[x + ((y+1) * GRID_WIDTH)].color : BLANK;
+
+        // Draw the current cell
+        DrawRectangle(x * CELL_SIZE + CELL_SIZE/3, y * CELL_SIZE + CELL_SIZE/3, CELL_SIZE/3, CELL_SIZE/3, currentColor);
+
+        // Draw the connections to neighbor cells
+        
+        if (ColorEquals(leftColor, currentColor)) {
+          DrawRectangle(x * CELL_SIZE, y * CELL_SIZE + CELL_SIZE/3, CELL_SIZE/3, CELL_SIZE/3, currentColor);
+        }
+        if (ColorEquals(rightColor, currentColor)) {
+          DrawRectangle(x * CELL_SIZE + 2*CELL_SIZE/3, y * CELL_SIZE + CELL_SIZE/3, CELL_SIZE/3, CELL_SIZE/3, currentColor);
+        }
+        if (ColorEquals(topColor, currentColor)) {
+          DrawRectangle(x * CELL_SIZE + CELL_SIZE/3, y * CELL_SIZE, CELL_SIZE/3, CELL_SIZE/3, currentColor);
+        }
+        if (ColorEquals(bottomColor, currentColor)) {
+          DrawRectangle(x * CELL_SIZE + CELL_SIZE/3, y * CELL_SIZE + 2*CELL_SIZE/3, CELL_SIZE/3, CELL_SIZE/3, currentColor);
+        }
       }
     }
   }
+}
+
+// Helper function to compare colors
+bool ColorEquals(Color c1, Color c2) {
+  return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b && c1.a == c2.a;
 }
 
 void drawSegment(v2 from, v2 to, f32 cellSize, Color color) {
   DrawRectangle(
     fminf(from.x, to.x),
     fminf(from.y, to.y),
-    fabsf(to.x - from.x) + cellSize,
-    fabsf(to.y - from.y) + cellSize,
+    fabsf(to.x - from.x) + cellSize/3,
+    fabsf(to.y - from.y) + cellSize/3,
     color
   );
 }

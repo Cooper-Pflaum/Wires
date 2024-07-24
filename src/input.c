@@ -7,10 +7,6 @@
 #include "types.h"
 #include "consts.h"
 
-
-
-
-
 void HandleInput(World *world, struct Input *inputs) {
   // Handle zoom
   world->zoom = _clamp(world->zoom + GetMouseWheelMove() * 0.25f, 0.25f, 10.0f);
@@ -61,3 +57,6 @@ void HandleInput(World *world, struct Input *inputs) {
     inputs->isDrawing = false;
   }
 }
+
+
+

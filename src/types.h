@@ -31,21 +31,27 @@ typedef enum {
   WIRE,
   INPUT,
   OUTPUT,
-  GATE_PART
-} CellType;
+  GATE
+} cellType;
+
+
+typedef struct {
+  v2 a; // start of wire
+  v2 b; // end of wire
+  Color wire_color;
+} wire;
 
 // Enum for gate types
 typedef enum {
-  GATE_AND,
-  GATE_OR,
-  GATE_NOT,
-  GATE_XOR,
-  // Add other gate types as needed
+  AND_GATE,
+  OR_GATE,
+  NOT_GATE,
+  XOR_GATE,
 } GateType;
 
 // Structure for the small cell
 typedef struct {
-  CellType type;
+  cellType type;
   bool state;
   v2 pos;
   u8 bit_size;
@@ -55,6 +61,20 @@ typedef struct {
   bool is_part_of_larger_component;
   int parent_component_id;
 } Cell;
+
+typedef struct {
+  cellType types;
+  bool state;
+  v2 pos;
+  u8 bit_size;
+  uchar connections;  // Bitfield for connections: 0bUDLR (Up, Down, Left, Right)
+  Color color;  // Color used for wire
+  unsigned long long value;
+  bool is_part_of_larger_component;
+  int parent_component_id;
+} Grid;
+
+
 
 // Structure for the larger component (e.g., 3x3 gates)
 typedef struct {
@@ -80,21 +100,12 @@ typedef enum {
     // Add other drawing modes as needed
 } DrawMode;
 
-
-typedef struct {
-    char name[32];
-    Color color;
-} CustomColor;
-
-
 typedef struct {
     bool show_debug;
+    bool show_bits_popup;
+    bool show_debug_lines;
     u8 selected_bits;
     Color wire_color;
-    Color custom_color;
-    bool show_bits_popup;
-    CustomColor saved_colors[MAX_CUSTOM_COLORS];
-    int num_saved_colors;
 } GUI;
 
 typedef struct {
