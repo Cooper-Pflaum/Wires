@@ -9,6 +9,6 @@
 // extern int grid[GRID_HEIGHT][GRID_WIDTH]; // Declare the grid array
 
 void initImGUI();
-void debug(World *world, struct Input *inputs, bool *open);
-void drawGUI(World *world, struct Input *inputs);
+void debug(World *world, Input *inputs, bool *open);
+void drawGUI(World *world, Input *inputs);
 #endif // GUI_H

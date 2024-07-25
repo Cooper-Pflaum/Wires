@@ -21,7 +21,7 @@ void initImGUI(){
   ImGui_ImplRaylib_BuildFontAtlas();
 }
 
-void debug(World *world, struct Input *inputs, bool *open) {
+void debug(World *world, Input *inputs, bool *open) {
   if (!*open) return;
   
   static bool vsync_enabled = true;
@@ -60,7 +60,7 @@ void debug(World *world, struct Input *inputs, bool *open) {
   igEnd();
 }
 
-void drawGUI(World *world, struct Input *inputs) {
+void drawGUI(World *world, Input *inputs) {
   GUI *gui = &world->gui;
 
   igBegin("MENU", NULL, 0);

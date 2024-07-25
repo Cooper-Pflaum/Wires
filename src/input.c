@@ -7,9 +7,9 @@
 #include "types.h"
 #include "consts.h"
 
-void HandleInput(World *world, struct Input *inputs) {
+void HandleInput(World *world, Input *inputs) {
   // Handle zoom
-  world->zoom = _clamp(world->zoom + GetMouseWheelMove() * 0.25f, 0.25f, 10.0f);
+  world->zoom = _clamp(world->zoom + GetMouseWheelMove() * 0.25f, 0.5f, 10.0f);
 
   // Handle panning
   if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) {

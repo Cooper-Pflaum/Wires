@@ -9,5 +9,5 @@
 f32 _clamp(f32 value, f32 min, f32 max);
 v2 _snapToGrid(v2 pos, u16 cell_size);
 ImVec4 _ColorToImVec4(Color color);
-bool _ColorEquals(Color c1, Color c2);
+bool ColorEquals(Color c1, Color c2);
 #endif // UTILS_H

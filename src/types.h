@@ -1,31 +1,21 @@
 #ifndef TYPES_H
 #define TYPES_H
-#define MAX_CUSTOM_COLORS 16
 
 #include <stdint.h>
-#include <unistd.h>
+#include <stdbool.h>
 #include "consts.h"
 #include "raylib.h"
 #include "../lib/raylib-cimgui/imgui_impl_raylib.h"
 
-typedef float    f32;
-typedef double   f64;
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
+typedef float         f32;
+typedef double        f64;
+typedef uint8_t       u8;
+typedef uint16_t      u16;
+typedef uint32_t      u32;
+typedef uint64_t      u64;
 typedef unsigned char uchar;
-typedef Vector2  v2;
+typedef Vector2       v2;
 
-// typedef struct {
-//   u8 state;     // Used for rotation of things like wires or gates
-//   u8 type;      // EMPTY, WIRE, GATE
-//   u8 databits;  // Bits across the gate or wire
-//   v2 pos;       // Position on the grid
-//   Color color;  // Color used for wire
-// } Cell;
-
-// Enum for cell types
 typedef enum {
   EMPTY,
   WIRE,
@@ -34,14 +24,6 @@ typedef enum {
   GATE
 } cellType;
 
-
-typedef struct {
-  v2 a; // start of wire
-  v2 b; // end of wire
-  Color wire_color;
-} wire;
-
-// Enum for gate types
 typedef enum {
   AND_GATE,
   OR_GATE,
@@ -49,80 +31,27 @@ typedef enum {
   XOR_GATE,
 } GateType;
 
-// Structure for the small cell
-typedef struct {
-  cellType type;
-  bool state;
-  v2 pos;
-  u8 bit_size;
-  uchar connections;  // Bitfield for connections: 0bUDLR (Up, Down, Left, Right)
-  Color color;  // Color used for wire
-  unsigned long long value;
-  bool is_part_of_larger_component;
-  int parent_component_id;
-} Cell;
-
-typedef struct {
-  cellType types;
-  bool state;
-  v2 pos;
-  u8 bit_size;
-  uchar connections;  // Bitfield for connections: 0bUDLR (Up, Down, Left, Right)
-  Color color;  // Color used for wire
-  unsigned long long value;
-  bool is_part_of_larger_component;
-  int parent_component_id;
-} Grid;
-
-
-
-// Structure for the larger component (e.g., 3x3 gates)
-typedef struct {
-  int id;
-  GateType type;
-  int top_left_x;
-  int top_left_y;
-  Cell* cells[3][3];  // Pointers to the 9 cells this component occupies
-  int input_count;
-  int output_count;
-  // You might want to add more specific properties for gates here
-} LargeComponent;
-
-// Enum for drawing modes
 typedef enum {
-    DRAW_EMPTY,
-    DRAW_WIRE,
-    DRAW_INPUT,
-    DRAW_OUTPUT,
-    DRAW_AND_GATE,
-    DRAW_OR_GATE,
-    DRAW_NOT_GATE,
-    // Add other drawing modes as needed
+  DRAW_EMPTY,
+  DRAW_WIRE,
+  DRAW_INPUT,
+  DRAW_OUTPUT,
+  DRAW_AND_GATE,
+  DRAW_OR_GATE,
+  DRAW_NOT_GATE,
+  // Add other drawing modes as needed
 } DrawMode;
 
 typedef struct {
-    bool show_debug;
-    bool show_bits_popup;
-    bool show_debug_lines;
-    u8 selected_bits;
-    Color wire_color;
+  u8 selected_bits;
+  bool show_debug;
+  bool show_bits_popup;
+  bool show_debug_lines;
+  Color wire_color;
 } GUI;
 
-typedef struct {
-    v2 screenSize;
-    bool menu_active;
-    f32 zoom;
-    v2 offset;
-    Cell grid[GRID_HEIGHT*GRID_WIDTH];
-    DrawMode current_draw_mode;
-    LargeComponent* large_components;  // Dynamic array of large components
-    // u64 large_component_count;
-    // int large_component_capacity;
-    // int next_component_id;  // For generating unique IDs for large components
-    GUI gui;
-} World;
 
-struct Input{
+typedef struct {
   u8 type;
   Color wire_color;
   v2 startPos;
@@ -130,9 +59,42 @@ struct Input{
   bool isDrawing;
   bool direction; // horizontal=1 | vertical=0 
   bool directionSet;
-};
+} Input;
 
+// Separate arrays for each attribute of Cell
+typedef struct {
+  cellType* type;
+  u32* value;
+  u32* parent_component_id;
+  u8* bit_size;
+  uchar* connections;  // Bitfield for connections: 0bUDLR (Up, Down, Left, Right)
+  v2* pos;
+  Color* color;  // Color used for wire
+  bool* state;
+  bool* is_part_of_larger_component;
+  size_t count;  // Number of cells
+} CellArray;
 
+// Separate arrays for each attribute of LargeComponent
+typedef struct {
+  u32* id;
+  u32* top_left_x;
+  u32* top_left_y;
+  u8* input_count;
+  u8* output_count;
+  size_t count;  // Number of large components
+  // Cell** cells[3][3];  // Pointers to the 9 cells this component occupies
+  GateType* type;
+} GateArray;
 
-
+typedef struct {
+    v2 screenSize;
+    bool menu_active;
+    f32 zoom;
+    v2 offset;
+    CellArray grid;
+    DrawMode current_draw_mode;
+    GateArray large_components;
+    GUI gui;
+} World;
 #endif // TYPES_H

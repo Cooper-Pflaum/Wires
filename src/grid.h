@@ -6,14 +6,11 @@
 #include "consts.h"
 
 // extern int grid[GRID_HEIGHT][GRID_WIDTH]; // Declare the grid array
+CellArray initCellArray();
+void freeCellArray(CellArray* cellArray);
 
-void drawWire(World *world, struct Input *inputs, bool isPreview);
-void drawWireConnections(World *world, u16 x, u16 y, Color color);
-bool isIntersection(World *world, u16 x, u16 y);
-void drawIntersection(World *world, u16 x, u16 y);
-bool ColorEquals(Color c1, Color c2);
+void updateGridCell(CellArray *cellArray, u32 x, u32 y, cellType type, Color color);
+void drawWire(World *world, Input *inputs, bool isPreview);
 void drawGrid(World *world);
-void drawWireCell(World *world, u16 x, u16 y);
-void connectAdjacentCells(World *world, u16 x, u16 y, Rectangle cellRect, Color color);
 
 #endif // GRID_H
