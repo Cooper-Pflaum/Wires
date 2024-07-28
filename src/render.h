@@ -1,7 +1,8 @@
-#ifndef GRID_H
-#define GRID_H
+#ifndef RENDER_H
+#define RENDER_H
 
 #include "raylib.h"
+#include "gui.h"
 #include "types.h"
 #include "consts.h"
 
@@ -13,4 +14,5 @@ void updateGridCell(CellArray *cellArray, u32 x, u32 y, cellType type, Color col
 void drawWire(World *world, Input *inputs, bool isPreview);
 void drawGrid(World *world);
 
-#endif // GRID_H
+void render(World *world, Input *inputs);
+#endif // RENDER_H

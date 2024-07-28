@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <math.h>
 #include <raylib.h>
+
 #include "utils.h"
-#include "grid.h"
+#include "render.h"
 #include "input.h"
 #include "types.h"
 #include "consts.h"

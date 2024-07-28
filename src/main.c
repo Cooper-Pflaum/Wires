@@ -2,7 +2,7 @@
 #include "raylib.h"
 
 #include "gui.h"
-#include "grid.h"
+#include "render.h"
 #include "input.h"
 #include "types.h"
 #include "consts.h"
@@ -13,11 +13,11 @@ World world = {
     .zoom   = 5.0f,
     .screenSize = { .x=W, .y=H },
     .gui = {
-        .show_debug = false,
-        .show_debug_lines = false,
-        .selected_bits = 1,
-        .wire_color = RED,  // Default color
-        .show_bits_popup = false
+      .show_debug = false,
+      .show_debug_lines = false,
+      .selected_bits = 1,
+      .wire_color = RED,  // Default color
+      .show_bits_popup = false
     },
     .grid = {0},  // Initialize to zero, we'll properly initialize it later
 };
@@ -54,22 +54,12 @@ void update() {
     if (IsWindowResized()) world.screenSize = (v2) {GetScreenWidth(), GetScreenHeight()};
 }
 
-void render() {
-    // Raylib  
-    ClearBackground((Color){0.0f, 0.0f, 0.0f, 1.0f});
-    BeginDrawing();
-        BeginMode2D((Camera2D){ .offset = world.offset, .target = {0, 0}, .rotation = 0.0f, .zoom = world.zoom});  
-            drawGrid(&world);
-        EndMode2D();
-    drawGUI(&world, &inputs);
-    EndDrawing();
-}
 
 int main() {
     init();
     while (!WindowShouldClose()) {
-        update();
-        render();
+      update();
+      render(&world, &inputs);
     }
     // Close ImGUI and Raylib
     ImGui_ImplRaylib_Shutdown();

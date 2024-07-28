@@ -68,7 +68,6 @@ typedef struct {
   u32* parent_component_id;
   u8* bit_size;
   uchar* connections;  // Bitfield for connections: 0bUDLR (Up, Down, Left, Right)
-  v2* pos;
   Color* color;  // Color used for wire
   bool* state;
   bool* is_part_of_larger_component;

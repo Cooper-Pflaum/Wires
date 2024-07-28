@@ -2,4 +2,5 @@ build/
 main
 imgui.ini
 .vscode
-
+lib/cimgui
+lib/raylib-cimgui
