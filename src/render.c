@@ -16,7 +16,6 @@
 CellArray initCellArray() {
   CellArray cellArray;
   cellArray.count = GRID_WIDTH * GRID_HEIGHT;
-
   cellArray.type =                     (cellType*)calloc(cellArray.count, sizeof(cellType));
   cellArray.state =                       (bool*) calloc(cellArray.count, sizeof(bool));
   cellArray.bit_size =                    (u8*)   calloc(cellArray.count, sizeof(u8));
@@ -29,9 +28,9 @@ CellArray initCellArray() {
   // Initialize positions and colors
   for (int y = 0; y < GRID_HEIGHT; y++) {
     for (int x = 0; x < GRID_WIDTH; x++) {
-    int index = y * GRID_WIDTH + x;
-    cellArray.color[index] = WHITE;
-    cellArray.parent_component_id[index] = -1;
+      int index = y * GRID_WIDTH + x;
+      cellArray.color[index] = WHITE;
+      cellArray.parent_component_id[index] = -1;
     }
   }
   return cellArray;
@@ -55,52 +54,52 @@ void updateGridCell(CellArray *cellArray, u32 x, u32 y, cellType type, Color col
 }
 
 void drawWire(World *world, Input *inputs, bool isPreview) {
-    CellArray *cellArray = &world->grid;
-    Color wireColor = isPreview ? ColorAlpha(inputs->wire_color, 0.5f) : inputs->wire_color;
-    f32 cellSize = CELL_SIZE * world->zoom;
+  CellArray *cellArray = &world->grid;
+  Color wireColor = isPreview ? ColorAlpha(inputs->wire_color, 0.5f) : inputs->wire_color;
+  f32 cellSize = CELL_SIZE * world->zoom;
 
-    // Calculate screen positions
-    v2 startScreen = {
-      inputs->startPos.x * cellSize + world->offset.x,
-      inputs->startPos.y * cellSize + world->offset.y
-    };
-    v2 endScreen = {
-      inputs->endPos.x * cellSize + world->offset.x,
-      inputs->endPos.y * cellSize + world->offset.y
-    };
-    v2 cornerScreen = inputs->direction ? 
-      (v2){endScreen.x, startScreen.y} : 
-      (v2){startScreen.x, endScreen.y};
+  // Calculate screen positions
+  v2 startScreen = {
+    inputs->startPos.x * cellSize + world->offset.x,
+    inputs->startPos.y * cellSize + world->offset.y
+  };
+  v2 endScreen = {
+    inputs->endPos.x * cellSize + world->offset.x,
+    inputs->endPos.y * cellSize + world->offset.y
+  };
+  v2 cornerScreen = inputs->direction ? 
+    (v2){endScreen.x, startScreen.y} : 
+    (v2){startScreen.x, endScreen.y};
 
-    if (isPreview) {
-        // Draw preview segments directly within drawWire
-        DrawRectangle(
-          fminf(startScreen.x, cornerScreen.x) + cellSize / 3,
-          fminf(startScreen.y, cornerScreen.y) + cellSize / 3,
-          fabsf(cornerScreen.x - startScreen.x) + cellSize / 3,
-          fabsf(cornerScreen.y - startScreen.y) + cellSize / 3,
-          wireColor
-        );
-        DrawRectangle(
-          fminf(cornerScreen.x, endScreen.x) + cellSize / 3,
-          fminf(cornerScreen.y, endScreen.y) + cellSize / 3,
-          fabsf(endScreen.x - cornerScreen.x) + cellSize / 3,
-          fabsf(endScreen.y - cornerScreen.y) + cellSize / 3,
-          wireColor
-        );
-    } else {
-        int dx = (inputs->endPos.x > inputs->startPos.x) - (inputs->endPos.x < inputs->startPos.x);
-        int dy = (inputs->endPos.y > inputs->startPos.y) - (inputs->endPos.y < inputs->startPos.y);
-        int x = inputs->startPos.x, y = inputs->startPos.y;
+  if (isPreview) {
+    // Draw preview segments directly within drawWire
+    DrawRectangle(
+      fminf(startScreen.x, cornerScreen.x) + cellSize / 3,
+      fminf(startScreen.y, cornerScreen.y) + cellSize / 3,
+      fabsf(cornerScreen.x - startScreen.x) + cellSize / 3,
+      fabsf(cornerScreen.y - startScreen.y) + cellSize / 3,
+      wireColor
+    );
+    DrawRectangle(
+      fminf(cornerScreen.x, endScreen.x) + cellSize / 3,
+      fminf(cornerScreen.y, endScreen.y) + cellSize / 3,
+      fabsf(endScreen.x - cornerScreen.x) + cellSize / 3,
+      fabsf(endScreen.y - cornerScreen.y) + cellSize / 3,
+      wireColor
+    );
+  } else {
+    int dx = (inputs->endPos.x > inputs->startPos.x) - (inputs->endPos.x < inputs->startPos.x);
+    int dy = (inputs->endPos.y > inputs->startPos.y) - (inputs->endPos.y < inputs->startPos.y);
+    int x = inputs->startPos.x, y = inputs->startPos.y;
 
-        do {
-          updateGridCell(cellArray, x, y, WIRE, wireColor);
-          if (x != inputs->endPos.x && (inputs->direction || y == inputs->endPos.y)) x += dx;
-          else if (y != inputs->endPos.y) y += dy;
-        } while (x != inputs->endPos.x || y != inputs->endPos.y);
+    do {
+      updateGridCell(cellArray, x, y, WIRE, wireColor);
+      if (x != inputs->endPos.x && (inputs->direction || y == inputs->endPos.y)) x += dx;
+      else if (y != inputs->endPos.y) y += dy;
+    } while (x != inputs->endPos.x || y != inputs->endPos.y);
 
-        updateGridCell(cellArray, inputs->endPos.x, inputs->endPos.y, WIRE, wireColor);
-    }
+    updateGridCell(cellArray, inputs->endPos.x, inputs->endPos.y, WIRE, wireColor);
+  }
 }
 
 void drawGrid(World *world) {
@@ -140,15 +139,17 @@ void drawGrid(World *world) {
 }
 
 
-
-
 void render(World *world, Input *inputs) {
-  // Raylib  
   ClearBackground((Color){0.0f, 0.0f, 0.0f, 1.0f});
   BeginDrawing();
-    BeginMode2D((Camera2D){ .offset = world->offset, .target = {0, 0}, .rotation = 0.0f, .zoom = world->zoom});  
-      drawGrid(world);
-    EndMode2D();
+
+  // Raylib  
+  BeginMode2D((Camera2D){ .offset = world->offset, .target = {0, 0}, .rotation = 0.0f, .zoom = world->zoom});  
+    drawGrid(world);
+  EndMode2D();
+
+  // ImGUI
   drawGUI(world, inputs);
+
   EndDrawing();
 }
